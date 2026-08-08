@@ -1,0 +1,18 @@
+[Unit]
+Description=Portfolio Message Server
+After=network.target
+
+[Service]
+Type=simple
+# 下面两行会在 setup.sh 里被替换为真实路径/用户，请勿手改占位符
+WorkingDirectory=__DIR__
+User=__USER__
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+# 可选：限制日志大小，避免磁盘写满
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

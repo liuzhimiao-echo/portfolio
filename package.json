@@ -1,0 +1,16 @@
+{
+  "name": "portfolio-msg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "个人作品集单页网站 + 访客留言服务（仅创建者可看，留言实时转发至创建者邮箱）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0"
+  }
+}

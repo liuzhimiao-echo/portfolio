@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>personal portfolio</title>
+<meta name="description" content="portfolio" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --water:#6ab0d6;
+  --water-2:#a8d0e6;
+  --ice:#c8e7f7;
+  --pink:#d97a9a;
+  --grad:linear-gradient(120deg,var(--water),var(--pink));
+  --maxw:1200px;
+  --radius:18px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+html[data-theme="dark"]{
+  --bg:#15161b;--bg-soft:#1b1c22;--surface:#20212a;--surface-2:#272833;
+  --text:#e8e9ed;--dim:#8e8f99;--border:rgba(255,255,255,.09);
+  --glow:rgba(106,176,214,.22);--shadow:0 24px 60px rgba(0,0,0,.5);
+}
+html[data-theme="light"]{
+  --bg:#eef0f3;--bg-soft:#f7f8fa;--surface:#fff;--surface-2:#f0f1f4;
+  --text:#1a1b22;--dim:#6b6c75;--border:rgba(0,0,0,.08);
+  --glow:rgba(106,176,214,.18);--shadow:0 18px 40px rgba(20,30,50,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Inter",system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;overflow-x:hidden;transition:background .5s var(--ease),color .5s var(--ease)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--water);color:#0b1018}
+.skip{position:absolute;left:-9999px;top:0;background:var(--water);color:#0b1018;padding:10px 16px;border-radius:0 0 10px 0;z-index:300;font-weight:600}
+.skip:focus{left:0}
+.nav{position:fixed;top:0;left:0;right:0;z-index:120;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,48px);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);background:color-mix(in srgb,var(--bg) 70%,transparent);border-bottom:1px solid transparent;transition:border-color .3s}
+.nav.scrolled{border-bottom-color:var(--border)}
+.brand{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:-.5px;font-size:17px;display:flex;align-items:center;gap:8px}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--water);box-shadow:0 0 12px var(--water);animation:dotBreath 3s ease-in-out infinite}
+@keyframes dotBreath{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.4);opacity:1}}
+.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a{font-size:13.5px;color:var(--dim);position:relative;padding:6px 2px;transition:color .25s;white-space:nowrap}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1.5px;background:var(--grad);transition:width .35s var(--ease)}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a.active::after,.nav-links a:hover::after{width:100%}
+.theme-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);display:grid;place-items:center;transition:transform .4s var(--ease),border-color .3s}
+.theme-btn:hover{transform:rotate(30deg);border-color:var(--water)}
+.theme-btn svg{width:16px;height:16px}
+@media (max-width:760px){.nav-links a{padding:4px 0;font-size:12.5px}.nav-links{gap:16px}}
+section{padding:clamp(80px,12vh,140px) clamp(20px,5vw,48px);position:relative}
+.wrap{max-width:var(--maxw);margin:0 auto}
+.eyebrow{font-family:"Space Grotesk";font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--water);margin-bottom:18px;display:inline-block}
+.sec-title{font-family:"Space Grotesk","Noto Serif SC";font-size:clamp(30px,5vw,48px);font-weight:700;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.sec-sub{color:var(--dim);font-size:16px;max-width:560px;margin-bottom:48px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+
+/* —— HERO —— */
+.hero{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:center;background:radial-gradient(ellipse 90% 80% at 50% 50%,#1a1c25 0%,#0f1016 80%)}
+.hero-rays{position:absolute;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(ellipse 95% 65% at 50% -10%, rgba(150,210,235,0.16), transparent 60%),
+  radial-gradient(ellipse 70% 45% at 22% -8%, rgba(180,225,245,0.08), transparent 60%),
+  radial-gradient(ellipse 75% 50% at 78% -8%, rgba(106,176,214,0.10), transparent 60%);
+mix-blend-mode:screen;animation:raysShift 16s ease-in-out infinite}
+@keyframes raysShift{0%,100%{transform:translateY(0) scale(1);opacity:.85}50%{transform:translateY(10px) scale(1.04);opacity:1}}
+
+/* —— particle whale canvas —— */
+#whale{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;animation:whaleBreath 8s ease-in-out infinite .4s}
+@keyframes whaleBreath{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.012) translateY(-6px)}}
+
+/* —— decorative blueprint overlay —— */
+.bp-frame{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;animation:bpIn 1.4s .4s var(--ease) forwards}
+.bp-fill{fill:rgba(106,176,214,.07);stroke:rgba(140,195,225,.32);stroke-width:1}
+.bp-corner{stroke:rgba(225,240,250,.35);stroke-width:1.2;fill:none}
+.bp-watermark{font-family:"Space Grotesk",sans-serif;fill:rgba(225,240,250,.45);letter-spacing:3px}
+.bp-watermark-sm{font-family:"Space Grotesk",sans-serif;fill:rgba(225,240,250,.3);letter-spacing:2px}
+.bp-stamp-text{font-family:"Noto Serif SC",serif;fill:rgba(225,240,250,.65)}
+.bp-seaweed{opacity:.4;stroke:rgba(120,180,210,.55);stroke-width:1.6;fill:none}
+.bp-fish{opacity:.5;fill:rgba(140,195,225,.4);stroke:rgba(225,240,250,.55);stroke-width:1.2;stroke-linejoin:round}
+.bp-fish-tail{fill:rgba(225,240,250,.3)}
+@keyframes bpIn{to{opacity:1}}
+
+/* life photo — enlarged, anchored to the red-frame area (left side) */
+.life-photo{position:absolute;left:clamp(20px,2vw,40px);bottom:clamp(140px,18vh,220px);width:clamp(260px,30vw,380px);aspect-ratio:1/1;object-fit:cover;border-radius:24px;border:1px solid color-mix(in srgb,var(--water) 35%,transparent);box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05) inset,0 0 60px rgba(106,176,214,.18);z-index:4;opacity:0;transform:translateY(30px);animation:photoIn 1.1s .6s var(--ease) forwards,photoBreath 6s 1.8s ease-in-out infinite}
+@keyframes photoIn{to{opacity:1;transform:translateY(0)}}
+@keyframes photoBreath{0%,100%{box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05) inset,0 0 60px rgba(106,176,214,.18)}50%{box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08) inset,0 0 90px rgba(106,176,214,.32)}}
+.life-tag{position:absolute;left:clamp(20px,2vw,40px);bottom:clamp(70px,10vh,120px);z-index:4;font-family:"Space Grotesk";font-size:11px;letter-spacing:3px;color:var(--dim);opacity:0;animation:photoIn 1s 1.4s var(--ease) forwards}
+.life-tag b{color:var(--water);font-weight:600;letter-spacing:1px}
+
+/* about-me bubble — bigger glass */
+.about-bubble{position:absolute;left:50%;top:80%;z-index:6;transform:translate(-50%,-50%);padding:22px 56px;border-radius:100px;font-family:"Space Grotesk","Noto Serif SC";font-size:clamp(20px,2.4vw,30px);font-weight:500;letter-spacing:1.5px;color:var(--text);background:rgba(255,255,255,.07);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 80px rgba(106,176,214,.28),inset 0 0 30px rgba(255,255,255,.08);opacity:0;cursor:pointer;animation:bubbleFloat 5s ease-in-out infinite;transition:opacity 1.1s ease,box-shadow .4s,transform .4s var(--ease)}
+.about-bubble.show{opacity:1}
+.about-bubble:hover{box-shadow:0 36px 100px rgba(106,176,214,.5),inset 0 0 36px rgba(255,255,255,.1);transform:translate(-50%,-50%) scale(1.05)}
+.about-bubble .inner{display:flex;align-items:center;gap:14px}
+.about-bubble .pulse{width:8px;height:8px;border-radius:50%;background:var(--water);box-shadow:0 0 12px var(--water);animation:dotBreath 2.4s ease-in-out infinite}
+@keyframes bubbleFloat{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,calc(-50% - 12px)) scale(1.03)}}
+
+/* leave-a-message bubble — glass, mirrors About Me, floats bottom-right */
+.msg-bubble{position:fixed;right:28px;bottom:28px;z-index:60;padding:15px 32px;border-radius:100px;font-family:"Space Grotesk","Noto Serif SC";font-size:clamp(15px,1.7vw,20px);font-weight:500;letter-spacing:1px;color:var(--text);background:rgba(255,255,255,.07);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18);box-shadow:0 24px 70px rgba(106,176,214,.28),inset 0 0 24px rgba(255,255,255,.08);cursor:pointer;display:flex;align-items:center;gap:10px;animation:msgFloat 5s ease-in-out infinite;transition:box-shadow .4s,transform .4s var(--ease)}
+.msg-bubble .pulse{width:8px;height:8px;border-radius:50%;background:var(--water);box-shadow:0 0 12px var(--water);animation:dotBreath 2.4s ease-in-out infinite}
+.msg-bubble:hover{box-shadow:0 30px 90px rgba(106,176,214,.5),inset 0 0 30px rgba(255,255,255,.1);transform:scale(1.05)}
+@keyframes msgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.msg-overlay{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;background:rgba(8,10,16,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .35s ease}
+.msg-overlay.show{opacity:1}
+.msg-overlay[hidden]{display:none}
+.msg-modal{position:relative;width:min(440px,92vw);padding:30px 30px 26px;border-radius:26px;background:rgba(20,24,33,.72);border:1px solid rgba(255,255,255,.16);box-shadow:0 40px 120px rgba(0,0,0,.5),inset 0 0 40px rgba(255,255,255,.05);transform:translateY(18px) scale(.98);transition:transform .35s var(--ease);text-align:left}
+.msg-overlay.show .msg-modal{transform:none}
+.msg-close{position:absolute;top:14px;right:16px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:var(--text);font-size:15px;cursor:pointer;line-height:1}
+.msg-close:hover{background:rgba(255,255,255,.12)}
+.msg-title{font-family:"Space Grotesk","Noto Serif SC";font-size:22px;font-weight:600;letter-spacing:.5px;margin:0 0 6px;color:var(--text)}
+.msg-sub{font-size:13px;color:var(--dim);margin:0 0 18px}
+.msg-name,.msg-text{width:100%;font-family:inherit;color:var(--text);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .25s,background .25s;box-sizing:border-box}
+.msg-name{margin-bottom:12px}
+.msg-text{resize:vertical;min-height:120px;line-height:1.5}
+.msg-name:focus,.msg-text:focus{border-color:var(--water);background:rgba(106,176,214,.08)}
+.msg-name::placeholder,.msg-text::placeholder{color:var(--dim)}
+.msg-actions{display:flex;justify-content:flex-end;margin-top:16px}
+.msg-send{padding:12px 30px;border-radius:100px;border:1px solid rgba(255,255,255,.2);background:rgba(106,176,214,.18);color:var(--text);font-family:"Space Grotesk","Noto Serif SC";font-size:15px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:background .3s,transform .3s var(--ease)}
+.msg-send:hover{background:rgba(106,176,214,.32);transform:translateY(-1px)}
+.msg-send:disabled{opacity:.55;cursor:not-allowed}
+.msg-status{margin-top:14px;font-size:13.5px;text-align:center;min-height:18px}
+.msg-status.ok{color:var(--water-2)}
+.msg-status.err{color:var(--pink)}
+
+
+/* welcome title — bold geometric uppercase, 3 lines, hover flips each letter L/R + ice-blue */
+.welcome{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:5;perspective:1200px;cursor:default;opacity:0;transition:opacity 1.1s ease;text-align:center;user-select:none}
+.welcome.show{opacity:1}
+.welcome-inner{display:inline-flex;flex-direction:column;align-items:center;gap:.04em;transform-style:preserve-3d}
+.welcome .row{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:.02em}
+.welcome .chw{display:inline-block;perspective:700px;cursor:pointer}.welcome .chw.space{cursor:default}.welcome .ch{display:inline-block;font-family:"Inter","Helvetica Neue",Arial,sans-serif;font-weight:800;font-size:clamp(40px,7.4vw,112px);letter-spacing:.01em;line-height:1.02;color:var(--text);transform-origin:center center;transform-style:preserve-3d;transition:transform .16s var(--ease),color .18s,text-shadow .18s;text-shadow:0 2px 30px rgba(106,176,214,.12)}
+.welcome .ch.space{width:.32em}
+.welcome .chw:hover .ch:not(.space){transform:rotateY(86deg) translateZ(14px);color:var(--ice);text-shadow:0 0 34px rgba(200,231,247,.75)}
+
+
+.hero-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:3px;color:var(--dim);z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.7}
+.hero-hint .line{width:1px;height:38px;background:linear-gradient(var(--water),transparent);animation:cue 1.8s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+#wave{position:fixed;inset:0;width:100vw;height:100vh;z-index:500;pointer-events:none;display:none}
+
+/* —— ABOUT (tag cloud) —— */
+.about{padding-top:clamp(90px,13vh,150px)}
+.about-grid{display:grid;grid-template-columns:minmax(200px,30%) 1fr;gap:clamp(28px,5vw,72px);align-items:start}
+.about-photo{position:relative;top:clamp(10px,4vh,60px)}
+.about-photo .life-photo{position:relative;left:auto;bottom:auto;width:100%;max-width:340px;opacity:1;transform:none;animation:photoBreath 6s ease-in-out infinite}
+.about-photo .life-tag{position:relative;left:auto;bottom:auto;margin-top:20px;opacity:1;animation:none}
+.about-right{position:relative}
+.about-head{max-width:680px;margin-bottom:60px}
+.about-head .sec-title{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.tag-cloud{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center}
+.cloud-tag{position:absolute;padding:14px 26px;border-radius:100px;font-size:clamp(14px,1.4vw,17px);color:var(--text);background:rgba(255,255,255,.05);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);white-space:nowrap;animation:cloudFloat var(--d,6s) ease-in-out infinite;animation-delay:var(--del,0s);transition:transform .35s var(--ease),border-color .3s,background .3s,color .3s;cursor:default}
+.cloud-tag:hover{transform:scale(1.08) translateY(-4px);border-color:color-mix(in srgb,var(--water) 50%,transparent);background:rgba(106,176,214,.1);color:var(--water-2)}
+@keyframes cloudFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.cloud-tag.warm:hover{border-color:var(--pink);background:rgba(217,122,154,.1);color:var(--pink)}
+.about-foot{margin-top:80px;color:var(--dim);font-size:14px;display:flex;align-items:center;gap:12px}
+.about-foot .arrow{color:var(--water)}
+@media(max-width:760px){
+  .about-grid{grid-template-columns:1fr}
+  .about-photo{position:relative;top:0;margin-bottom:34px}
+  .about-photo .life-photo{max-width:300px}
+}
+
+/* —— AI PROJECTS —— */
+.ai-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.ai-card{position:relative;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);padding:32px 30px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .45s var(--ease),box-shadow .45s,border-color .4s;cursor:pointer;overflow:hidden;text-align:left}
+.ai-card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s}
+.ai-card:hover::before{opacity:.9}
+.ai-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.ai-card .num{font-family:"Space Grotesk";font-size:12px;color:var(--water);letter-spacing:2px}
+.ai-card h3{font-family:"Space Grotesk","Noto Serif SC";font-size:22px;font-weight:600;margin:10px 0 8px;letter-spacing:-.5px}
+.ai-card p{color:var(--dim);font-size:14px;line-height:1.6}
+.ai-card .meta{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.ai-card .pill{font-size:11px;letter-spacing:1px;padding:5px 10px;border-radius:100px;border:1px solid var(--border);color:var(--dim)}
+.ai-card .cta{margin-top:18px;font-size:13px;color:var(--water);display:inline-flex;align-items:center;gap:6px}
+.ai-card .cta svg{transition:transform .3s var(--ease)}
+.ai-card:hover .cta svg{transform:translateX(4px)}
+.ai-card.coming{opacity:.85;cursor:default}
+.ai-card.coming:hover{transform:none;box-shadow:none}
+.ai-card.coming:hover::before{opacity:0}
+.ai-detail{margin-top:30px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);overflow:hidden;display:none;animation:detailIn .5s var(--ease)}
+.ai-detail.open{display:block}
+@keyframes detailIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.ai-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg-soft)}
+.ai-tabs button{padding:16px 28px;font-size:13px;color:var(--dim);letter-spacing:1px;position:relative;transition:color .3s}
+.ai-tabs button.on{color:var(--text)}
+.ai-tabs button.on::after{content:"";position:absolute;left:20px;right:20px;bottom:-1px;height:2px;background:var(--grad)}
+.ai-panel{display:none;padding:36px}
+.ai-panel.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:36px;align-items:start}
+@media (max-width:820px){.ai-panel.on{grid-template-columns:1fr;gap:24px}}
+.ai-panel-text h4{font-family:"Space Grotesk";font-size:13px;letter-spacing:2px;color:var(--water);margin-bottom:10px}
+.ai-panel-text h3{font-family:"Space Grotesk","Noto Serif SC";font-size:24px;font-weight:600;letter-spacing:-.5px;margin-bottom:14px}
+.ai-panel-text p{color:var(--dim);font-size:14.5px;line-height:1.75;margin-bottom:12px}
+.ai-panel-text ul{color:var(--dim);font-size:14px;margin:14px 0 18px 18px;line-height:1.8}
+.ai-panel-text .open-btn{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:11px 22px;border-radius:100px;background:var(--grad);color:#0b1018;font-weight:600;font-size:13px;transition:transform .3s var(--ease),box-shadow .3s}
+.ai-panel-text .open-btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px var(--glow)}
+.ai-embed{position:relative;border-radius:14px;overflow:hidden;background:var(--bg);border:1px solid var(--border);min-height:480px}
+.ai-embed iframe{width:100%;height:480px;border:0;display:block;background:#fff}
+.ai-embed .note{position:absolute;top:12px;left:12px;right:12px;padding:10px 14px;border-radius:10px;background:rgba(11,16,24,.82);backdrop-filter:blur(8px);font-size:12px;color:var(--water-2);display:flex;align-items:center;gap:8px;z-index:2}
+.ai-embed .note a{color:var(--water);text-decoration:underline}
+.ai-embed .note a:hover{color:#fff}
+.ai-panel.manual{display:flex;align-items:center;justify-content:center;min-height:420px;text-align:center}
+.ai-panel.manual .empty{color:var(--dim)}
+.ai-panel.manual .empty .icon{font-size:42px;color:var(--water);opacity:.6;margin-bottom:14px;display:block}
+.ai-panel.manual .empty h4{font-family:"Space Grotesk","Noto Serif SC";font-size:20px;color:var(--text);margin-bottom:8px}
+
+/* —— GALLERIES —— */
+.gallery-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:48px;flex-wrap:wrap}
+.gallery-head .sec-title{margin-bottom:0}
+.gallery-head .sec-sub{margin-bottom:0;max-width:420px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:820px){.gallery{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.gallery{grid-template-columns:1fr}}
+.g-item{position:relative;border-radius:14px;overflow:hidden;background:var(--surface);border:1px solid var(--border);aspect-ratio:var(--ar,3/4);cursor:pointer;animation:itemBreath 5s ease-in-out infinite;animation-delay:var(--bd,0s);transition:transform .5s var(--ease),box-shadow .5s}
+.g-item:hover{transform:translateY(-6px) scale(1.01);box-shadow:var(--shadow);animation-play-state:paused}
+.g-item img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.g-item:hover img{transform:scale(1.06)}
+.g-item .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 18px 16px;background:linear-gradient(transparent,rgba(11,16,24,.85));color:#fff;font-size:13px;opacity:0;transition:opacity .35s;display:flex;justify-content:space-between;align-items:center}
+.g-item:hover .cap{opacity:1}
+.g-item .cap b{font-family:"Space Grotesk";font-weight:600;letter-spacing:.5px}
+.g-item .cap span{font-size:11px;color:var(--water-2);letter-spacing:1px}
+@keyframes itemBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
+
+/* —— VIDEO —— */
+.video-wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:50px;align-items:center}
+@media (max-width:820px){.video-wrap{grid-template-columns:1fr;gap:30px}}
+.video-card{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/10;background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .45s var(--ease),box-shadow .45s}
+.video-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.video-card::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 80% at 30% 30%,rgba(106,176,214,.35),transparent 60%),radial-gradient(80% 80% at 80% 80%,rgba(217,122,154,.28),transparent 60%),var(--surface)}
+.video-card .play{position:relative;z-index:2;width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.92);color:#0b1018;display:grid;place-items:center;box-shadow:0 18px 50px rgba(0,0,0,.4);transition:transform .35s var(--ease)}
+.video-card:hover .play{transform:scale(1.1)}
+.video-card .play svg{width:30px;height:30px;margin-left:4px}
+.video-card .tag{position:absolute;top:18px;left:18px;z-index:2;font-family:"Space Grotesk";font-size:12px;letter-spacing:2px;padding:7px 14px;border-radius:100px;background:rgba(11,16,24,.7);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);color:var(--water-2)}
+.video-card .stamp{position:absolute;bottom:18px;right:18px;z-index:2;font-family:"Space Grotesk";font-size:11px;letter-spacing:1.5px;color:var(--dim)}
+.video-text .sec-title{margin-bottom:18px}
+.video-text p{color:var(--dim);font-size:15.5px;line-height:1.8;margin-bottom:20px}
+.video-text .xhs-link{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:100px;background:var(--grad);color:#0b1018;font-weight:600;font-size:14px;transition:transform .35s var(--ease),box-shadow .35s}
+.video-text .xhs-link:hover{transform:translateY(-3px);box-shadow:0 16px 36px var(--glow)}
+
+/* —— CONTACT —— */
+.contact{text-align:center}
+.contact .sec-title{font-size:clamp(38px,7vw,84px);letter-spacing:-2px;line-height:1}
+.contact .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.contact p{color:var(--dim);max-width:500px;margin:24px auto 36px;font-size:16px}
+.contact .email{font-family:"Space Grotesk";font-size:clamp(18px,2vw,22px);color:var(--water);letter-spacing:.5px;margin-bottom:30px;display:inline-block;transition:color .3s}
+.contact .email:hover{color:var(--water-2)}
+.socials{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.socials a{font-size:13.5px;padding:11px 20px;border-radius:100px;border:1px solid var(--border);transition:.3s var(--ease);color:var(--dim)}
+.socials a:hover{border-color:var(--water);color:var(--water);transform:translateY(-3px)}
+footer{padding:36px clamp(20px,5vw,48px);border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--dim);font-size:12.5px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--water);outline-offset:3px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}#whale,.bp-frame,.about-bubble{opacity:1;animation:none}}
+@media (max-width:720px){.hero{background:radial-gradient(ellipse at 50% 40%,#1a1c25 0%,#0f1016 80%)}}
+</style>
+</head>
+<body>
+<a class="skip" href="#about">跳到主内容</a>
+<nav class="nav" id="nav">
+  <a class="brand" href="#hero"><span class="dot"></span>portfolio</a>
+  <div class="nav-links">
+    <a href="#about">关于</a>
+    <a href="#ai">AI 项目</a>
+    <a href="#campus">校园</a>
+    <a href="#editorial">图文</a>
+    <a href="#video">视频</a>
+    <a href="#contact">联系</a>
+    <button class="theme-btn" id="theme" aria-label="toggle theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    </button>
+  </div>
+</nav>
+
+<main id="main">
+
+<section id="hero" class="hero" aria-label="主视觉 — 骨架鲸鱼">
+  <div class="hero-rays" aria-hidden="true"></div>
+
+  <!-- 颗粒骨架鲸鱼 canvas: 整张几乎铺满首屏，dot-stippling 解剖图风格 -->
+  <canvas id="whale" aria-hidden="true"></canvas>
+
+  <!-- 装饰层: 印章 + 水印 + 海草 + 小鱼 (中央方框已移除，不会动) -->
+  <svg class="bp-frame" viewBox="0 0 1800 1100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <!-- 海草 -->
+    <g class="bp-seaweed">
+      <path d="M 1100 950 Q 1080 1000 1100 1060"/>
+      <path d="M 1150 950 Q 1170 1010 1140 1080"/>
+      <path d="M 1300 980 Q 1280 1020 1310 1080"/>
+      <path d="M 250 900 Q 230 950 250 1010"/>
+      <path d="M 300 920 Q 320 970 295 1030"/>
+    </g>
+    <!-- 小鱼 -->
+    <g class="bp-fish">
+      <g transform="translate(1400 750) rotate(-10) scale(1.1)">
+        <path d="M 0,0 Q 18,-9 36,0 Q 18,9 0,0 Z"/>
+        <path class="bp-fish-tail" d="M 36,0 L 46,-7 L 46,7 Z"/>
+      </g>
+      <g transform="translate(1300 850) rotate(20) scale(0.85)">
+        <path d="M 0,0 Q 18,-9 36,0 Q 18,9 0,0 Z"/>
+        <path class="bp-fish-tail" d="M 36,0 L 46,-7 L 46,7 Z"/>
+      </g>
+      <g transform="translate(1500 600) rotate(-25) scale(0.6)">
+        <path d="M 0,0 Q 18,-9 36,0 Q 18,9 0,0 Z"/>
+        <path class="bp-fish-tail" d="M 36,0 L 46,-7 L 46,7 Z"/>
+      </g>
+      <g transform="translate(1000 880) rotate(15) scale(0.8)">
+        <path d="M 0,0 Q 18,-9 36,0 Q 18,9 0,0 Z"/>
+        <path class="bp-fish-tail" d="M 36,0 L 46,-7 L 46,7 Z"/>
+      </g>
+      <g transform="translate(500 950) rotate(40) scale(0.7)">
+        <path d="M 0,0 Q 18,-9 36,0 Q 18,9 0,0 Z"/>
+        <path class="bp-fish-tail" d="M 36,0 L 46,-7 L 46,7 Z"/>
+      </g>
+      <g transform="translate(350 480) rotate(-40) scale(0.5)">
+        <path d="M 0,0 Q 18,-9 36,0 Q 18,9 0,0 Z"/>
+        <path class="bp-fish-tail" d="M 36,0 L 46,-7 L 46,7 Z"/>
+      </g>
+    </g>
+    <!-- 左下印章 -->
+    <g transform="translate(140 1010)" opacity=".7">
+      <rect x="-50" y="-42" width="100" height="84" fill="none" stroke="rgba(225,240,250,.5)" stroke-width="2"/>
+      <text class="bp-stamp-text" x="0" y="12" font-size="50" text-anchor="middle" font-weight="700">穗</text>
+    </g>
+    <!-- 右下水印 -->
+    <g>
+      <text class="bp-watermark" x="1330" y="985" font-size="14">VISION · DESIGN · ILLUSTRATION</text>
+      <text class="bp-watermark-sm" x="1330" y="1010" font-size="11">WHALE · SKELETON · BLUE</text>
+      <text class="bp-watermark-sm" x="1330" y="1030" font-size="11">study + creation · v0.3</text>
+    </g>
+    <!-- 左上编号 -->
+    <text class="bp-watermark-sm" x="80" y="160" font-size="10" opacity=".7">No. 001 / specimen</text>
+  </svg>
+
+  <!-- 照片已移至第二页左侧 (见 #about) -->
+
+  <!-- Welcome 标题: 三行大写 Inter Bold，hover 时单个字母左右翻转(风琴) + 冰蓝 -->
+  <div class="welcome" aria-label="welcome to my space">
+    <span class="welcome-inner" data-text="WELCOME
+TO MY
+SPACE"></span>
+  </div>
+
+  <!-- About Me 玻璃气泡按键（点击水浪翻页进入第二页） -->
+  <button class="about-bubble" id="aboutBubble" aria-label="进入 About Me">
+    <span class="inner"><span class="pulse"></span>About Me</span>
+  </button>
+
+  <div class="hero-hint"><span>下滑 · 或点 ABOUT ME</span><span class="line"></span></div>
+</section>
+
+<section id="about" class="about">
+  <div class="wrap about-grid">
+    <aside class="about-photo reveal">
+      <img class="life-photo" src="images/life.jpg" alt="生活照" />
+      <div class="life-tag">✦ <b>我</b> · 一点小故事</div>
+    </aside>
+    <div class="about-right">
+      <div class="about-head reveal">
+        <span class="eyebrow">关于 · 我</span>
+        <h2 class="sec-title">一个在水蓝色世界里慢慢生长的人。</h2>
+        <p style="color:var(--dim);font-size:16.5px;max-width:600px">设计 / AI / 字体排版 / 摄影 / 视频 / 偶尔的白日梦。这些标签是我——也是正在成为的我。</p>
+      </div>
+      <div class="tag-cloud reveal" id="tagCloud">
+        <span class="cloud-tag" data-i="0">📷 摄影</span>
+        <span class="cloud-tag" data-i="1">🤖 研究 AI</span>
+        <span class="cloud-tag" data-i="2">🅰 字体排版控</span>
+        <span class="cloud-tag warm" data-i="3">一半 E 一半 I</span>
+        <span class="cloud-tag warm" data-i="4">打不死</span>
+        <span class="cloud-tag warm" data-i="5">减肥事业：失败</span>
+        <span class="cloud-tag" data-i="6">🎬 生活 vlog</span>
+        <span class="cloud-tag" data-i="7">深夜手作人</span>
+        <span class="cloud-tag" data-i="8">玻璃拟态爱好者</span>
+        <span class="cloud-tag" data-i="9">水蓝色鲸鱼</span>
+        <span class="cloud-tag" data-i="10">细节控</span>
+        <span class="cloud-tag warm" data-i="11">偶尔文艺</span>
+        <span class="cloud-tag" data-i="12">校园进行中</span>
+        <span class="cloud-tag" data-i="13">🪴 慢就是快</span>
+      </div>
+      <div class="about-foot reveal d2"><span>下滑查看 AI 项目 <span class="arrow">→</span></span></div>
+    </div>
+  </div>
+</section>
+
+<section id="ai">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">AI 项目 · 项目介绍</span>
+      <h2 class="sec-title">想象 → 可点击。</h2>
+      <p class="sec-sub">围绕智能交互的原型探索。PRD、原型、可用性——都在一处。</p>
+    </div>
+    <div class="ai-cards">
+      <button class="ai-card reveal" data-project="p1">
+        <div>
+          <div class="num">项目 · 01</div>
+          <h3>智能交互原型 · 飞书</h3>
+          <p>围绕智能交互的原型探索：自然的人机协作，关注细微之处。</p>
+        </div>
+        <div>
+          <div class="meta"><span class="pill">原型</span><span class="pill">AI</span><span class="pill">PRD</span></div>
+          <div class="cta">查看详情 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+        </div>
+      </button>
+      <div class="ai-card coming reveal d1">
+        <div>
+          <div class="num">项目 · 02</div>
+          <h3>更多 · 敬请期待</h3>
+          <p>把零散的想法变成可演示的原型。</p>
+        </div>
+        <div>
+          <div class="meta"><span class="pill">敬请期待</span></div>
+          <div class="cta" style="color:var(--dim)">敬请期待 ✦</div>
+        </div>
+      </div>
+      <div class="ai-card coming reveal d2">
+        <div>
+          <div class="num">项目 · 03</div>
+          <h3>实验性视觉</h3>
+          <p>粒子 / 玻璃 / 水波 / 暗色情绪——把“好看”做成可交互。</p>
+        </div>
+        <div>
+          <div class="meta"><span class="pill">实验</span><span class="pill">视觉</span></div>
+          <div class="cta" style="color:var(--dim)">进行中 ✦</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-detail" id="aiDetail">
+      <div class="ai-tabs">
+        <button class="on" data-tab="prd">PRD</button>
+        <button data-tab="manual">使用说明</button>
+        <button data-tab="close" style="margin-left:auto;color:var(--dim)" aria-label="close">✕</button>
+      </div>
+      <div class="ai-panel on" data-panel="prd">
+        <div class="ai-panel-text">
+          <h4>项目 01 · PRD</h4>
+          <h3>智能交互原型</h3>
+          <p>一次关于“自然交互”的探索——让机器像一个懂得何时停顿、回应、留白的伙伴。</p>
+          <ul>
+            <li>目标：在飞书文档中维护原型 / PRD / 可用性笔记</li>
+            <li>重点：交互原型 · 微动效 · UX 设计</li>
+            <li>状态：v0.3 进行中</li>
+          </ul>
+          <p style="font-size:13px;color:var(--dim);opacity:.8">※ 占位文字——请替换为真实 PRD。</p>
+          <a class="open-btn" href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg" target="_blank" rel="noopener">打开飞书原型 →</a>
+        </div>
+        <div class="ai-embed">
+          <div class="note">⚠ 飞书限制 X-Frame。若预览为空白，
+            <a href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg#share-MnOUd7eC9osu7yxMFI3cYB4Snpc" target="_blank" rel="noopener">点此打开 →</a>
+          </div>
+          <iframe src="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg#share-MnOUd7eC9osu7yxMFI3cYB4Snpc" referrerpolicy="no-referrer" loading="lazy" title="feishu prototype preview"></iframe>
+        </div>
+      </div>
+      <div class="ai-panel manual" data-panel="manual">
+        <div class="empty"><span class="icon">✦</span><h4>使用说明</h4><p>内容建设中</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="campus">
+  <div class="wrap">
+    <div class="gallery-head reveal">
+      <div><span class="eyebrow">校园 · 校园生活</span><h2 class="sec-title">校园里闪亮的小碎片。</h2></div>
+      <p class="sec-sub">摄影 / Cosplay / 实习 / 散步 / 看展——课堂之外的东西。</p>
+    </div>
+    <div class="gallery">
+      <figure class="g-item reveal" style="--ar:3/4;--bd:.0s"><img src="images/campus-1.jpg" alt=""><figcaption class="cap"><b>Cos · 精灵</b><span>2025</span></figcaption></figure>
+      <figure class="g-item reveal d1" style="--ar:3/4;--bd:.3s"><img src="images/campus-2.jpg" alt=""><figcaption class="cap"><b>汉服</b><span>2024</span></figcaption></figure>
+      <figure class="g-item reveal d2" style="--ar:3/4;--bd:.6s"><img src="images/campus-3.jpg" alt=""><figcaption class="cap"><b>阅读</b><span>2024</span></figcaption></figure>
+      <figure class="g-item reveal d1" style="--ar:4/3;--bd:.9s"><img src="images/campus-4.jpg" alt=""><figcaption class="cap"><b>Cos · 暗黑</b><span>2025</span></figcaption></figure>
+      <figure class="g-item reveal d2" style="--ar:4/3;--bd:1.2s"><img src="images/campus-5.jpg" alt=""><figcaption class="cap"><b>笔记 · 玩具外企</b><span>2025</span></figcaption></figure>
+      <figure class="g-item reveal d3" style="--ar:4/3;--bd:1.5s"><img src="images/campus-6.jpg" alt=""><figcaption class="cap"><b>笔记 · 英国外企</b><span>2025</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="editorial">
+  <div class="wrap">
+    <div class="gallery-head reveal">
+      <div><span class="eyebrow">图文 · 字体排版</span><h2 class="sec-title">有呼吸感的内容。</h2></div>
+      <p class="sec-sub">微信 / 小红书图文——标题、留白、字体与节奏。</p>
+    </div>
+    <div class="gallery" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+      <figure class="g-item reveal" style="--ar:9/16;--bd:.0s"><img src="images/editorial-1.jpg" alt=""><figcaption class="cap"><b>野外冷雨</b><span>微信</span></figcaption></figure>
+      <figure class="g-item reveal d1" style="--ar:9/16;--bd:.3s"><img src="images/editorial-2.jpg" alt=""><figcaption class="cap"><b>财经频道 · 雨</b><span>微信</span></figcaption></figure>
+      <figure class="g-item reveal d2" style="--ar:9/16;--bd:.6s"><img src="images/editorial-3.jpg" alt=""><figcaption class="cap"><b>莫负春光</b><span>小红书</span></figcaption></figure>
+      <figure class="g-item reveal d3" style="--ar:9/16;--bd:.9s"><img src="images/editorial-3.jpg" alt=""><figcaption class="cap"><b>春 · 春</b><span>小红书</span></figcaption></figure>
+      <figure class="g-item reveal d2" style="--ar:9/16;--bd:1.2s"><img src="images/editorial-5.jpg" alt=""><figcaption class="cap"><b>财经频道排版</b><span>微信</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="video">
+  <div class="wrap">
+    <div class="gallery-head reveal">
+      <div><span class="eyebrow">视频 · vlog</span><h2 class="sec-title">日常生活，一部可以反复看的小电影。</h2></div>
+    </div>
+    <div class="video-wrap">
+      <a class="video-card reveal" href="https://www.xiaohongshu.com/explore/69be90e500000000210109d2?xsec_token=AB-LPfIFTEFDw0oLtzgJ720s3rOzWgJFXhbImS_Ai5_cw=&xsec_source=pc_search" target="_blank" rel="noopener" aria-label="open vlog on xiaohongshu">
+        <div class="tag">《 拍摄 vlog 》</div>
+        <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="stamp">XIAOHONGSHU · 2026</div>
+      </a>
+      <div class="video-text reveal d1">
+        <h3 class="sec-title">一段 vlog，一份记录。</h3>
+        <p>校园、光影、镜头下的小情绪。点击在小红书打开原片——一个 ❤️ 对我意义很大。</p>
+        <a class="xhs-link" href="https://www.xiaohongshu.com/explore/69be90e500000000210109d2?xsec_token=AB-LPfIFTEFDw0oLtzgJ720s3rOzWgJFXhbImS_Ai5_cw=&xsec_source=pc_search" target="_blank" rel="noopener">在小红书打开 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap reveal">
+    <span class="eyebrow">感谢滑动 · 尾声</span>
+    <h2 class="sec-title">感谢观看，<br><span class="grad">让我们一起做点什么。</span></h2>
+    <p>无论是项目、想法，还是只想聊聊——给我留言吧。</p>
+    <a class="email" href="mailto:hello@yourname.dev">hello@yourname.dev</a>
+    <div class="socials">
+      <a href="https://www.xiaohongshu.com/explore/69be90e500000000210109d2?xsec_token=AB-LPfIFTEFDw0oLtzgJ720s3rOzWgJFXhbImS_Ai5_cw=&xsec_source=pc_search" target="_blank" rel="noopener">xiaohongshu</a>
+      <a href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg" target="_blank" rel="noopener">feishu</a>
+      <a href="#">dribbble</a>
+      <a href="#">behance</a>
+      <a href="#">instagram</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>© 2026 · 用一点水蓝、一点灰，和很多热爱做成。</span>
+  <span>HTML / CSS / SVG · 无框架</span>
+</footer>
+
+<button class="msg-bubble" id="msgBubble" aria-label="leave a message"><span class="pulse"></span>Leave a message</button>
+<div class="msg-overlay" id="msgOverlay" hidden>
+  <div class="msg-modal" role="dialog" aria-modal="true" aria-label="leave a message">
+    <button class="msg-close" id="msgClose" aria-label="close">✕</button>
+    <h3 class="msg-title">Leave a message</h3>
+    <p class="msg-sub">访客留言会直接发到创建者邮箱 · only the creator sees it</p>
+    <input class="msg-name" id="msgName" type="text" maxlength="40" placeholder="你的称呼（可不填）" autocomplete="off" />
+    <textarea class="msg-text" id="msgText" maxlength="1000" placeholder="写下你的留言…（最多 1000 字）"></textarea>
+    <div class="msg-actions">
+      <button class="msg-send" id="msgSend">Send</button>
+    </div>
+    <div class="msg-status" id="msgStatus" role="status"></div>
+  </div>
+</div>
+
+<canvas id="wave"></canvas>
+
+<script>
+(function(){
+  const root=document.documentElement, btn=document.getElementById('theme');
+  const saved=localStorage.getItem('theme');
+  if(saved) root.setAttribute('data-theme',saved);
+  else if(matchMedia('(prefers-color-scheme: light)').matches) root.setAttribute('data-theme','light');
+  btn.addEventListener('click',()=>{
+    const next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    localStorage.setItem('theme',next);
+  });
+})();
+
+(function(){
+  const nav=document.getElementById('nav');
+  const links=[...document.querySelectorAll('.nav-links a[href^="#"]')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>20));
+  const spy=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===id));}});
+  },{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(s=>spy.observe(s));
+})();
+
+(function(){
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+
+(function(){
+  const cloud=document.getElementById('tagCloud');
+  if(!cloud) return;
+  const tags=[...cloud.querySelectorAll('.cloud-tag')];
+  const W=cloud.clientWidth, H=Math.max(560, cloud.clientHeight);
+  const placed=[];
+  function tryPlace(tag){
+    const w=tag.offsetWidth, h=tag.offsetHeight;
+    for(let tries=0;tries<400;tries++){
+      const x=Math.random()*(W-w-40)+20;
+      const y=Math.random()*(H-h-40)+20;
+      let ok=true;
+      for(const p of placed){if(!(x+w<p.x-12||x>p.x+p.w+12||y+h<p.y-12||y>p.y+p.h+12)){ok=false;break;}}
+      if(ok){placed.push({x,y,w,h});return{x,y};}
+    }
+    return{x:Math.random()*(W-w),y:Math.random()*(H-h)};
+  }
+  tags.forEach((t)=>{
+    const p=tryPlace(t);
+    t.style.left=p.x+'px';
+    t.style.top=p.y+'px';
+    t.style.setProperty('--d',(5+Math.random()*3)+'s');
+    t.style.setProperty('--del',(Math.random()*2)+'s');
+  });
+})();
+
+(function(){
+  const detail=document.getElementById('aiDetail');
+  const tabs=[...detail.querySelectorAll('.ai-tabs button')];
+  const panels=[...detail.querySelectorAll('.ai-panel')];
+  function openTab(name){panels.forEach(p=>p.classList.toggle('on',p.dataset.panel===name));tabs.forEach(t=>t.classList.toggle('on',t.dataset.tab===name));}
+  tabs.forEach(t=>t.addEventListener('click',()=>{if(t.dataset.tab==='close'){detail.classList.remove('open');return;}openTab(t.dataset.tab);}));
+  document.querySelectorAll('.ai-card[data-project]').forEach(card=>{
+    card.addEventListener('click',()=>{detail.classList.add('open');openTab('prd');detail.scrollIntoView({behavior:'smooth',block:'start'});});
+  });
+})();
+
+/* —— Hero: particle skeleton whale (dot-stippling 大型解剖骨架，几乎铺满首屏) —— */
+(function(){
+  const cvs = document.getElementById('whale');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const DPR = Math.min(devicePixelRatio||1, 2);
+  const VBW=1800, VBH=1100;
+  let vW=0,vH=0,scale=1,offX=0,offY=0;
+  const points = [];
+  const mouse = { x:-9999, y:-9999, active:false };
+
+  /* ---------- helpers ---------- */
+  function add(x,y,sz,type,a){
+    points.push({hx:x,hy:y, x:x, y:y, vx:0,vy:0, sz:sz, a:a, type:type, phase:Math.random()*Math.PI*2});
+  }
+  function jitter(x,y,t){ return [x+(Math.random()-.5)*t, y+(Math.random()-.5)*t]; }
+
+  /* ---------- particle builder ---------- */
+  function build(){
+    points.length = 0;
+
+    /* ===== 刺壳 SPIKY SHELL (左侧主体) ================
+       中心 (700, 500)，由 11 根长放射刺 + 螺旋椎体 + 深蓝眼眶组成
+       刺的角度从 -150° (左上) 顺时针扫到 +30° (右下) */
+    const shellCx=700, shellCy=500;
+    const N_SPIKES=11;
+    const spikeAngles=[];
+    for(let s=0;s<N_SPIKES;s++){
+      spikeAngles.push(-Math.PI*0.85 + (s/(N_SPIKES-1)) * Math.PI*1.05);
+    }
+    // 每根刺：一束粒子从中心向外，长度变化，宽度从中段向尖端收窄
+    for(let s=0;s<N_SPIKES;s++){
+      const a=spikeAngles[s];
+      const len=300 + Math.random()*220;
+      const baseW=22 + Math.random()*18;
+      for(let i=0;i<280;i++){
+        const t=Math.pow(Math.random(),0.55);   // 密度沿刺分布（根部密，尖端稀）
+        const dist=t*len;
+        const w=baseW*(1-t*0.85)+0.6;
+        const px=shellCx + Math.cos(a)*dist;
+        const py=shellCy + Math.sin(a)*dist;
+        const off=(Math.random()-0.5)*w;
+        const px2=px + Math.cos(a+Math.PI/2)*off;
+        const py2=py + Math.sin(a+Math.PI/2)*off;
+        add(px2, py2, 0.5+Math.random()*0.85, 'shell', 0.55+Math.random()*0.4);
+      }
+    }
+
+    /* ===== 螺旋椎体 (刺壳的中心锥/壳体) ================
+       8 层椭圆堆叠，从底部宽到顶部窄，形成圆锥螺旋 */
+    for(let layer=0;layer<8;layer++){
+      const t=layer/7;
+      const rx=110 - t*70;
+      const ry=70 - t*45;
+      const cx=shellCx + (Math.random()-0.5)*4;
+      const cy=shellCy + 35 - t*80;
+      for(let i=0;i<350;i++){
+        const theta=Math.random()*Math.PI*2;
+        const r=Math.sqrt(Math.random());
+        const x=cx+Math.cos(theta)*r*rx;
+        const y=cy+Math.sin(theta)*r*ry;
+        add(x, y, 0.5+Math.random()*0.7, 'shell', 0.45+Math.random()*0.35);
+      }
+    }
+
+    /* ===== 深蓝眼眶 EYE ===============================
+       椭圆形空洞 + 深色内部 + 亮蓝虹膜 */
+    const eyeCx=590, eyeCy=720, eyeRx=98, eyeRy=72;
+    // 眼眶亮环
+    for(let i=0;i<260;i++){
+      const theta=Math.random()*Math.PI*2;
+      const rr=1+Math.random()*0.12;
+      const x=eyeCx+Math.cos(theta)*eyeRx*rr;
+      const y=eyeCy+Math.sin(theta)*eyeRy*rr;
+      add(x, y, 0.6+Math.random()*0.7, 'eye', 0.7+Math.random()*0.3);
+    }
+    // 虹膜中心亮核
+    for(let i=0;i<90;i++){
+      const theta=Math.random()*Math.PI*2;
+      const r=Math.sqrt(Math.random())*16;
+      const x=eyeCx+Math.cos(theta)*r;
+      const y=eyeCy+Math.sin(theta)*r;
+      add(x, y, 0.7+Math.random()*0.6, 'eye', 0.85+Math.random()*0.15);
+    }
+
+    /* ===== 缠绕鱼形 FISH (右上 → 中 → 右下) =============
+       S 形 Bezier 曲线，模拟参考图中鱼形身体缠绕壳侧 */
+    function fishAt(t){
+      const u=1-t;
+      const p0=[1500,180], p1=[1280,420], p2=[1100,760], p3=[1450,1020];
+      return [
+        u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],
+        u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1]
+      ];
+    }
+    // 鱼头羽冠 (头顶羽毛状发散)
+    const headCx=1500, headCy=180;
+    for(let i=0;i<560;i++){
+      const a=Math.random()*Math.PI*2;
+      const r=Math.sqrt(Math.random())*75;
+      const x=headCx + Math.cos(a)*r;
+      const y=headCy + Math.sin(a)*r*1.2 - Math.random()*45;  // 上方羽冠更稀
+      add(x, y, 0.5+Math.random()*0.7, 'fish', 0.55+Math.random()*0.35);
+    }
+    // 鱼头主体 (稍下密集)
+    for(let i=0;i<520;i++){
+      const theta=Math.random()*Math.PI*2;
+      const r=Math.sqrt(Math.random())*65;
+      const x=headCx+Math.cos(theta)*r;
+      const y=headCy+80+Math.sin(theta)*r*0.8;
+      add(x, y, 0.55+Math.random()*0.7, 'fish', 0.55+Math.random()*0.4);
+    }
+    // 鱼身体 (沿 S 曲线，厚度中段最大)
+    for(let i=0;i<280;i++){
+      const t=i/280;
+      const [bx,by]=fishAt(t);
+      const thickness = 70*Math.sin(t*Math.PI) + 22;
+      for(let j=0;j<24;j++){
+        const ang=Math.random()*Math.PI*2;
+        const r=Math.sqrt(Math.random())*thickness;
+        add(bx+Math.cos(ang)*r, by+Math.sin(ang)*r, 0.55+Math.random()*0.7, 'fish', 0.55+Math.random()*0.35);
+      }
+    }
+    // 鱼尾鳍 (V 形两片向下展开)
+    const tailCx=1450, tailCy=1020;
+    const tailUpTip=[1620,1080], tailLoTip=[1300,1080];
+    for(let i=0;i<700;i++){
+      let u=Math.random(), v=Math.random();
+      if(u+v>1){u=1-u;v=1-v;}
+      const w=1-u-v;
+      const x=u*tailCx + v*tailUpTip[0] + w*tailLoTip[0] + (Math.random()-0.5)*8;
+      const y=u*tailCy + v*tailUpTip[1] + w*tailLoTip[1] + (Math.random()-0.5)*8;
+      add(x, y, 0.55+Math.random()*0.7, 'fish', 0.5+Math.random()*0.4);
+    }
+
+    /* ===== 散落气泡 BUBBLES (左下方) ===================
+       6 个圆环空心气泡，沿对角线从 shell 左下散开 */
+    const bubbles=[[230,860,42],[280,920,30],[350,990,28],[440,1030,36],[520,1060,24],[310,820,22]];
+    for(const [bx,by,br] of bubbles){
+      const N=Math.floor(br*4);
+      for(let i=0;i<N;i++){
+        const a=Math.random()*Math.PI*2;
+        const rr=br + (Math.random()-0.5)*2;
+        const x=bx+Math.cos(a)*rr;
+        const y=by+Math.sin(a)*rr*0.95;
+        add(x, y, 0.55+Math.random()*0.6, 'bubble', 0.65+Math.random()*0.3);
+      }
+      // 气泡内一小颗亮高光
+      for(let i=0;i<8;i++){
+        const a=Math.random()*Math.PI*2;
+        const r=Math.random()*br*0.5;
+        const x=bx+Math.cos(a)*r;
+        const y=by+Math.sin(a)*r;
+        add(x, y, 0.6+Math.random()*0.4, 'bubble', 0.85);
+      }
+    }
+
+    /* ===== 闪光星点 SPARKLES (零星点缀) =================
+       给整个画面点缀几个微亮粒子，模拟参考图的菱形星光 */
+    for(let i=0;i<70;i++){
+      const x=100 + Math.random()*1700;
+      const y=80 + Math.random()*1020;
+      add(x, y, 0.9+Math.random()*0.6, 'spark', 0.9+Math.random()*0.1);
+    }
+  }
+
+  /* ---------- canvas size / project ---------- */
+  function size(){
+    const r = cvs.parentElement.getBoundingClientRect();
+    vW = r.width; vH = r.height;
+    cvs.width = vW*DPR; cvs.height = vH*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    scale = Math.max(vW/VBW, vH/VBH);   // 'slice' fit
+    offX = (vW - VBW*scale)/2;
+    offY = (vH - VBH*scale)/2;
+  }
+
+  /* ---------- render loop ---------- */
+  function loop(t){
+    ctx.clearRect(0,0,vW,vH);
+
+    for(let i=0;i<points.length;i++){
+      const p = points[i];
+      // 微波动 (鲸鱼整体呼吸感)
+      const wave = Math.sin((t*0.0009) + p.phase) * 1.2;
+
+      // 目标位置 (home + wave)
+      let tx = p.hx*scale + offX;
+      let ty = p.hy*scale + offY + wave;
+
+      // 鼠标推开 + 提亮
+      let repel = 0;
+      if(mouse.active){
+        const mdx = tx - mouse.x;
+        const mdy = ty - mouse.y;
+        const md = Math.hypot(mdx,mdy);
+        if(md<150){
+          repel = (150-md)/150;
+          const f = repel*9;
+          tx += (mdx/(md||1))*f;
+          ty += (mdy/(md||1))*f;
+        }
+      }
+
+      // 缓动到目标位置
+      p.vx = (tx - p.x)*0.45;
+      p.vy = (ty - p.y)*0.45;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // 颜色：随 type 不同（整体提亮，让左侧骨架更明显）
+      const bright = Math.min(1, p.a*1.12 + 0.14 + repel*0.55);
+      let r1,g1,b1;
+      if(p.type==='shell'){ r1=205; g1=228; b1=244; }
+      else if(p.type==='fish'){ r1=170; g1=210; b1=232; }
+      else if(p.type==='eye'){ r1=185; g1=220; b1=240; }
+      else if(p.type==='bubble'){ r1=200; g1=225; b1=240; }
+      else if(p.type==='spark'){ r1=225; g1=240; b1=252; }
+      else if(p.type==='node'){ r1=222; g1=242; b1=254; }
+      else if(p.type==='tooth'){ r1=160; g1=200; b1=228; }
+      else if(p.type==='spine'){ r1=195; g1=228; b1=245; }
+      else if(p.type==='rib' || p.type==='fin'){ r1=160; g1=202; b1=228; }
+      else if(p.type==='tailU' || p.type==='tailL'){ r1=175; g1=212; b1=236; }
+      else { r1=158; g1=202; b1=234; } // fallback
+      ctx.fillStyle = `rgba(${r1},${g1},${b1},${bright})`;
+
+      const sz = Math.max(0.4, p.sz*scale*(1+repel*0.6));
+      ctx.fillRect(p.x-sz/2, p.y-sz/2, sz, sz);
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  /* ---------- init ---------- */
+  function init(){
+    size();
+    build();
+    requestAnimationFrame(loop);
+  }
+  init();
+  addEventListener('resize', ()=>{ size(); build(); });
+
+  /* ---------- mouse ---------- */
+  addEventListener('mousemove', e=>{
+    mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
+  });
+  addEventListener('mouseleave', ()=>{ mouse.active = false; });
+  // hide interactive canvas on touch
+  if(matchMedia('(hover: none)').matches){ mouse.active = false; }
+})();
+
+/* —— Hero: split welcome title into per-letter spans, then reveal —— */
+(function(){
+  const wrap=document.querySelector('.welcome-inner');
+  if(wrap){
+    const text=wrap.dataset.text||'welcome to my space';
+    const rows=text.split('\n');
+    let i=0;
+    rows.forEach((row)=>{
+      const rowEl=document.createElement('span');
+      rowEl.className='row';
+      wrap.appendChild(rowEl);
+      [...row].forEach((c)=>{
+        const isSpace = (c===' ');
+        const hit=document.createElement('span');
+        hit.className='chw'+(isSpace?' space':'');
+        const s=document.createElement('span');
+        s.className='ch'+(isSpace?' space':'');
+        s.style.setProperty('--i',i++);
+        s.textContent = isSpace ? ' ' : c;
+        hit.appendChild(s);
+        rowEl.appendChild(hit);
+      });
+    });
+  }
+  const bubble=document.getElementById('aboutBubble');
+  const welcome=document.querySelector('.welcome');
+  let shown=false;
+  setTimeout(()=>{if(!shown){shown=true;bubble.classList.add('show');welcome.classList.add('show');}},900);
+})();
+
+/* —— Water-wave page-transition (irregular sea, fast, varied opacity) —— */
+(function(){
+  const wave=document.getElementById('wave');
+  const wctx=wave.getContext('2d');
+  const DPR=Math.min(devicePixelRatio||1,2);
+  let wW=0,wH=0;
+  function size(){
+    wW=innerWidth;wH=innerHeight;
+    wave.width=wW*DPR;wave.height=wH*DPR;
+    wctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  size();
+  addEventListener('resize',size);
+
+  const state={active:false,level:0,t:0};
+
+  function hash(i){const v=Math.sin(i*127.1+31.7)*43758.5453;return v-Math.floor(v);}
+
+  /* 不规则海面：5 个非谐波正弦 + 沿 x 漂移的振幅包络 + 波峰锐化（trochoidal 近似） */
+  function surface(x,t,seed){
+    const k=seed*1.37;
+    const env=1+0.52*Math.sin(x*0.0033+t*0.62+k)+0.28*Math.sin(x*0.0017-t*0.37+k*2.1);
+    let s=0;
+    s+=Math.sin(x*0.0089 - t*1.35 + k*1.7)*16;
+    s+=Math.sin(x*0.0171 + t*2.10 + k*3.3)*9.5;
+    s+=Math.sin(x*0.0263 - t*2.75 + k*0.6)*6;
+    s+=Math.sin(x*0.0437 + t*3.45 + k*4.8)*3.2;
+    s+=Math.sin(x*0.0721 - t*4.30 + k*2.2)*1.6;
+    s*=env;
+    return s + 0.012*s*Math.abs(s);
+  }
+
+  /* 三层水体：越靠后越淡、越高、流动越慢 */
+  const layers=[
+    {seed:0.0, dy:-22, tk:0.62, a0:0.34, a1:0.26, a2:0.20},
+    {seed:1.0, dy:-10, tk:0.84, a0:0.60, a1:0.52, a2:0.44},
+    {seed:2.0, dy:  0, tk:1.00, a0:0.97, a1:0.95, a2:1.00}
+  ];
+
+  function draw(){
+    wctx.clearRect(0,0,wW,wH);
+    const lvl=state.level, t=state.t, step=5;
+
+    layers.forEach(function(L){
+      const base=lvl+L.dy, lt=t*L.tk;
+      wctx.beginPath();
+      wctx.moveTo(0,wH);
+      wctx.lineTo(0,base+surface(0,lt,L.seed));
+      for(let x=step;x<=wW;x+=step) wctx.lineTo(x,base+surface(x,lt,L.seed));
+      wctx.lineTo(wW,wH);
+      wctx.closePath();
+      const g=wctx.createLinearGradient(0,base-30,0,wH);
+      g.addColorStop(0,   'rgba(142,200,232,'+L.a0+')');
+      g.addColorStop(0.18,'rgba(96,164,206,' +(L.a0*0.92)+')');
+      g.addColorStop(0.45,'rgba(52,104,146,' +L.a1+')');
+      g.addColorStop(1,   'rgba(16,36,56,'   +L.a2+')');
+      wctx.fillStyle=g;
+      wctx.fill();
+    });
+
+    /* 前层浪脊：分段描边，每段透明度不同 */
+    wctx.lineWidth=1.5;
+    wctx.lineCap='round';
+    for(let x=0;x<wW;x+=12){
+      const a=0.14+0.52*Math.abs(Math.sin(x*0.0071+t*1.9))*(0.55+0.45*Math.sin(x*0.019-t*2.6));
+      wctx.strokeStyle='rgba(214,238,250,'+Math.max(0.05,a).toFixed(3)+')';
+      wctx.beginPath();
+      wctx.moveTo(x,   lvl+surface(x,   t,2));
+      wctx.lineTo(x+12,lvl+surface(x+12,t,2));
+      wctx.stroke();
+    }
+
+    /* 泡沫：大小 / 速度 / 透明度全部随机化 */
+    for(let i=0;i<30;i++){
+      const sp=26+hash(i+50)*110;
+      const fx=(((hash(i)*wW)+t*sp)%(wW+90))-45;
+      const fy=lvl+surface(fx,t,2)-2-hash(i+9)*13;
+      const r=0.9+hash(i+7)*3.4;
+      const a=0.10+hash(i+3)*0.62;
+      wctx.fillStyle='rgba(224,242,252,'+a.toFixed(3)+')';
+      wctx.beginPath();
+      wctx.arc(fx,fy,r,0,Math.PI*2);
+      wctx.fill();
+    }
+  }
+
+  function loop(){if(state.active){draw();requestAnimationFrame(loop);}}
+
+  function goToAbout(){
+    if(state.active) return;
+    state.active=true;
+    wave.style.display='block';
+    const rise=620,drain=430,hold=40,SPD=2.1,OVER=105;
+    const tStart=performance.now();
+    state.level=wH;
+    function riseFrame(now){
+      const p=Math.min(1,(now-tStart)/rise);
+      const e=1-Math.pow(1-p,3);
+      state.level=(wH+OVER)*(1-e)-OVER;
+      state.t=now/1000*SPD;
+      if(p<1) requestAnimationFrame(riseFrame);
+      else{
+        const about=document.getElementById('about');
+        const y=about.getBoundingClientRect().top+scrollY-10;
+        window.scrollTo({top:y,behavior:'auto'});
+        setTimeout(function(){
+          const dStart=performance.now();
+          function drainFrame(dnow){
+            const dp=Math.min(1,(dnow-dStart)/drain);
+            const de=dp<0.5?2*dp*dp:1-Math.pow(-2*dp+2,2)/2;
+            state.level=-OVER+(wH+OVER)*de;
+            state.t=dnow/1000*SPD;
+            if(dp<1) requestAnimationFrame(drainFrame);
+            else{state.active=false;wave.style.display='none';state.level=wH;}
+          }
+          requestAnimationFrame(drainFrame);
+        },hold);
+      }
+    }
+    requestAnimationFrame(riseFrame);
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('aboutBubble').addEventListener('click',goToAbout);
+  document.querySelector('.hero-hint')?.addEventListener('click',goToAbout);
+})();
+</script>
+<script>
+(function(){
+  const bubble=document.getElementById('msgBubble');
+  const overlay=document.getElementById('msgOverlay');
+  const close=document.getElementById('msgClose');
+  const nameI=document.getElementById('msgName');
+  const textI=document.getElementById('msgText');
+  const send=document.getElementById('msgSend');
+  const status=document.getElementById('msgStatus');
+  const ENDPOINT=window.MSG_ENDPOINT||'/api/msg';
+  let lastFocus=null;
+  function openModal(){lastFocus=document.activeElement;overlay.hidden=false;requestAnimationFrame(()=>overlay.classList.add('show'));setTimeout(()=>textI.focus(),60);}
+  function shut(){overlay.classList.remove('show');setTimeout(()=>{overlay.hidden=true;status.textContent='';status.className='msg-status';},350);if(lastFocus)lastFocus.focus();}
+  bubble.addEventListener('click',openModal);
+  close.addEventListener('click',shut);
+  overlay.addEventListener('click',(e)=>{if(e.target===overlay)shut();});
+  document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&!overlay.hidden)shut();});
+  send.addEventListener('click',async()=>{
+    const t=textI.value.trim();
+    if(!t){status.textContent='请先写点什么吧';status.className='msg-status err';return;}
+    send.disabled=true;status.textContent='发送中…';status.className='msg-status';
+    try{
+      const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:nameI.value.trim(),text:t})});
+      if(!res.ok)throw new Error('http '+res.status);
+      status.textContent='已送达，谢谢你 ✦';status.className='msg-status ok';
+      textI.value='';nameI.value='';
+      setTimeout(shut,1500);
+    }catch(err){
+      status.textContent='留言服务未连接，请稍后再试';status.className='msg-status err';
+    }finally{send.disabled=false;}
+  });
+})();
+</script>
+</body>
+</html>
