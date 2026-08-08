@@ -3,52 +3,36 @@
 //   1) 托管 index.html / images 等静态资源
 //   2) POST /api/msg   接收访客留言 → 存入 messages.json + 邮件转发给创建者（仅创建者可见）
 //   3) GET  /inbox?key=SECRET   创建者专属私密收件箱（实时 SSE）
-// 运行： node server.js   （需先填 msg-config.json）
+// 运行： node server.js
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const url = require('url');
-const nodemailer = require('nodemailer');
 const os = require('os');
 
 const ROOT = __dirname;
 const CONFIG_PATH = path.join(ROOT, 'msg-config.json');
-// 留言数据目录：可通过 DATA_DIR 环境变量重定向（Railway 挂载 Volume 时持久化用）
 const MSG_DIR = process.env.DATA_DIR || ROOT;
 const MSG_FILE = path.join(MSG_DIR, 'messages.json');
 
-// ---------- 配置加载 / 生成 ----------
+// ---------- 配置加载 ----------
 function loadConfig() {
   let cfg;
   try { cfg = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8')); }
   catch (e) { cfg = {}; }
-  // 端口：Railway 等平台通过环境变量 PORT 注入；本地回退 3000
   cfg.port = parseInt(process.env.PORT, 10) || cfg.port || 3000;
-  // 收件箱密钥：优先用环境变量（部署时不写进代码仓库）
   cfg.secret = process.env.MSG_SECRET || cfg.secret || '';
-  // 首次运行且未设置密钥时，自动生成强随机密钥并回写（仅本地模式；部署请用 MSG_SECRET 固定）
   if (!cfg.secret) {
     cfg.secret = crypto.randomBytes(18).toString('hex');
     try { fs.writeFileSync(CONFIG_PATH, JSON.stringify(cfg, null, 2)); } catch (e) {}
-    console.log('\n[config] 已自动生成私密收件箱密钥，已写入 msg-config.json');
+    console.log('\n[config] 已自动生成私密收件箱密钥');
   }
   cfg.email = cfg.email || {};
-// 邮箱配置：任一 EMAIL_* 环境变量都触发合并，不再以 EMAIL_TO 为门控（之前漏判导致 user/pass 没读到）
-const EMAIL_ENV_KEYS = ['EMAIL_PROVIDER','EMAIL_TO','EMAIL_USER','EMAIL_PASS','EMAIL_FROM'];
-const hasEmailEnv = EMAIL_ENV_KEYS.some(k => process.env[k] !== undefined);
-if (hasEmailEnv || process.env.EMAIL_ENABLED !== undefined) {
-  if (process.env.EMAIL_ENABLED !== undefined) {
-    cfg.email.enabled = process.env.EMAIL_ENABLED !== 'false';
-  } else if (hasEmailEnv && cfg.email.enabled === undefined) {
-    cfg.email.enabled = true;
+  if (process.env.EMAIL_TO) {
+    cfg.email.to = process.env.EMAIL_TO;
+    if (process.env.EMAIL_FROM) cfg.email.from = process.env.EMAIL_FROM;
   }
-  cfg.email.provider = process.env.EMAIL_PROVIDER || cfg.email.provider || 'qq';
-  cfg.email.to       = process.env.EMAIL_TO       || cfg.email.to;
-  cfg.email.user     = process.env.EMAIL_USER     || cfg.email.user     || cfg.email.to;
-  cfg.email.from     = process.env.EMAIL_FROM     || cfg.email.from     || cfg.email.user;
-  cfg.email.pass     = process.env.EMAIL_PASS     || cfg.email.pass;
-}
   return cfg;
 }
 const CONFIG = loadConfig();
@@ -63,72 +47,43 @@ function saveMessages() {
   fs.writeFileSync(MSG_FILE, JSON.stringify(messages, null, 2));
 }
 
-// ---------- 邮件转发 ----------
-// 常见邮箱服务商的 SMTP 预设（在 msg-config.json 设 provider 即可自动填 host/port/secure）
-const SMTP_PRESETS = {
-  qq:      { host: 'smtp.qq.com',          port: 587, secure: false },
-  '163':   { host: 'smtp.163.com',         port: 465, secure: true },
-  gmail:   { host: 'smtp.gmail.com',       port: 465, secure: true },
-  outlook: { host: 'smtp.office365.com',   port: 587, secure: false },
-};
-function resolveSmtp(email) {
-  const e = email || {};
-  const smtp = e.smtp ? Object.assign({}, e.smtp) : {};
-  if (e.provider && SMTP_PRESETS[e.provider]) {
-    const p = SMTP_PRESETS[e.provider];
-    smtp.host = smtp.host || p.host;
-    smtp.port = smtp.port || p.port;
-    if (smtp.secure === undefined) smtp.secure = p.secure;
-  }
-  // 兼容老写法：smtp.* 与 email 顶层字段都可作为登录凭据
-  smtp.host = smtp.host || e.host || '';
-  smtp.user = e.user || smtp.user || '';
-  smtp.pass = e.pass || smtp.pass || '';
-  return smtp;
-}
+// ---------- 邮件转发（Resend HTTP API，HTTPS 443，避开 Railway 屏蔽 SMTP 出网） ----------
+const RESEND_API = 'https://api.resend.com/emails';
 function emailReady() {
-  const e = CONFIG.email || {};
-  const smtp = resolveSmtp(e);
-  return !!e.enabled && !!e.to && !!smtp.host && !!smtp.user && !!smtp.pass;
+  return !!process.env.RESEND_API_KEY && !!(CONFIG.email && CONFIG.email.to);
 }
-
-let transporter = null;
-if (emailReady()) {
-  const smtp = resolveSmtp(CONFIG.email);
-  try {
-    transporter = nodemailer.createTransport({
-      host: smtp.host,
-      port: smtp.port,
-      secure: !!smtp.secure,
-      auth: { user: smtp.user, pass: smtp.pass },
-    });
-    console.log('[email] SMTP 已启用 →', CONFIG.email.to);
-  } catch (e) {
-    console.error('[email] 初始化失败，留言仍会本地保存：', e.message);
-    transporter = null;
-  }
-} else if (CONFIG.email && CONFIG.email.enabled) {
-  console.log('[email] 已开启但未填齐 SMTP 信息（provider/to/user/pass），留言仅本地保存 + 私密收件箱可见。');
-} else {
-  console.log('[email] 未启用（msg-config.json 中 email.enabled=false）。留言仅本地保存 + 私密收件箱可见。');
-}
+console.log(emailReady()
+  ? '[email] Resend 已启用 → ' + CONFIG.email.to
+  : '[email] Resend 未启用（缺 RESEND_API_KEY 或 EMAIL_TO），留言仅本地保存 + 私密收件箱可见。');
 
 async function forwardByEmail(msg) {
-  if (!transporter) return;
-  const smtp = resolveSmtp(CONFIG.email);
+  if (!emailReady()) return;
   const time = new Date(msg.ts).toLocaleString('zh-CN', { hour12: false });
   const name = msg.name || '（匿名）';
+  const subject = `【作品集新留言】${name}`;
+  const text =
+    `时间：${time}\n` +
+    `访客：${name}\n` +
+    `IP：${msg.ip}\n` +
+    `留言：\n${msg.text}\n`;
   try {
-    await transporter.sendMail({
-      from: CONFIG.email.from || smtp.user,
-      to: CONFIG.email.to,
-      subject: `【作品集新留言】${name}`,
-      text:
-        `时间：${time}\n` +
-        `访客：${name}\n` +
-        `IP：${msg.ip}\n` +
-        `留言：\n${msg.text}\n`,
+    const r = await fetch(RESEND_API, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + process.env.RESEND_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Portfolio <onboarding@resend.dev>',
+        to: [CONFIG.email.to],
+        subject,
+        text,
+      }),
     });
+    if (!r.ok) {
+      const err = await r.text();
+      throw new Error('Resend HTTP ' + r.status + ' ' + err);
+    }
     console.log('[email] 已转发新留言给', CONFIG.email.to);
   } catch (e) {
     console.error('[email] 发送失败（留言已本地保存）：', e.message);
@@ -161,7 +116,7 @@ const MIME = {
   '.json': 'application/json; charset=utf-8',
   '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp',
-  '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
+  '.svg': 'image/svg+xml', '.ico': 'image/x-ico',
   '.woff2': 'font/woff2', '.woff': 'font/woff',
 };
 function serveStatic(req, res, pathname) {
@@ -211,21 +166,20 @@ function inboxHtml(key) {
 <script>
   const KEY='${key}';
   const list=document.getElementById('list'),c=document.getElementById('c');
+  let messages=[];
   function esc(s){return (s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
   function render(arr,freshId){
     c.textContent=arr.length;
     if(!arr.length){list.innerHTML='<div class="empty">还没有留言</div>';return;}
     list.innerHTML=arr.slice().reverse().map(m=>{
       const t=new Date(m.ts).toLocaleString('zh-CN',{hour12:false});
-      return '<div class="item'+(m.id===freshId?' new':'')+'"><div class="meta"><span class="who">'+
-        esc(m.name||'匿名')+'</span><span>'+t+'</span></div><div class="txt">'+esc(m.text)+'</div></div>';
+      return '<div class="item'+(m.id===freshId?' new':'')+'"><div class="meta"><span class="who">'+esc(m.name||'匿名')+'</span><span>'+t+'</span></div><div class="txt">'+esc(m.text)+'</div></div>';
     }).join('');
   }
-  async function load(){const r=await fetch('/api/messages?key='+KEY);if(r.ok)render(await r.json());}
+  async function load(){const r=await fetch('/api/messages?key='+KEY);if(r.ok){messages=await r.json();render(messages);}}
   load();
   const es=new EventSource('/api/stream?key='+KEY);
-  es.onmessage=e=>{const m=JSON.parse(e.data);messages=messages||[];messages.push(m);render(messages,m.id);};
-  let messages=null;
+  es.onmessage=e=>{const m=JSON.parse(e.data);messages.push(m);render(messages,m.id);};
   document.getElementById('copy').onclick=async()=>{
     const r=await fetch('/api/messages?key='+KEY);const arr=await r.json();
     const txt=arr.slice().reverse().map(m=>'['+new Date(m.ts).toLocaleString('zh-CN',{hour12:false})+'] '+(m.name||'匿名')+':\\n'+m.text).join('\\n\\n');
@@ -241,7 +195,6 @@ const server = http.createServer(async (req, res) => {
   const u = url.parse(req.url, true);
   const p = u.pathname;
 
-  // 提交留言
   if (p === '/api/msg' && req.method === 'POST') {
     let body = '';
     req.on('data', d => { body += d; if (body.length > 1e6) req.destroy(); });
@@ -261,21 +214,18 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 私密收件箱页面（需密钥）
   if (p === '/inbox') {
     if (u.query.key !== CONFIG.secret) { res.writeHead(403); return res.end('403 Forbidden — 密钥错误'); }
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     return res.end(inboxHtml(CONFIG.secret));
   }
 
-  // 留言列表（需密钥）
   if (p === '/api/messages') {
     if (u.query.key !== CONFIG.secret) { res.writeHead(403); return res.end(JSON.stringify({ error: 'forbidden' })); }
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify(messages));
   }
 
-  // SSE 实时流（需密钥）
   if (p === '/api/stream') {
     if (u.query.key !== CONFIG.secret) { res.writeHead(403); return res.end('forbidden'); }
     res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive' });
@@ -285,14 +235,11 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 静态资源
   serveStatic(req, res, p);
 });
 
 server.listen(CONFIG.port, '0.0.0.0', () => {
   console.log('\n✅ 作品集服务已启动');
-
-  // 局域网 IP（同一 WiFi 下的手机 / 其他设备用这个访问，而非 localhost）
   const ips = [];
   const ifaces = os.networkInterfaces();
   for (const name of Object.keys(ifaces)) {
@@ -300,14 +247,12 @@ server.listen(CONFIG.port, '0.0.0.0', () => {
       if (ni.family === 'IPv4' && !ni.internal) ips.push(ni.address);
     }
   }
-
   console.log('   本机访问 : http://localhost:' + CONFIG.port + '/');
   if (ips.length) {
-    console.log('   手机 / 同 WiFi 设备访问（用这个）：');
+    console.log('   手机 / 同 WiFi 设备访问：');
     ips.forEach(ip => console.log('     → http://' + ip + ':' + CONFIG.port + '/'));
   } else {
     console.log('   （未检测到局域网 IP，手机需走公网部署）');
   }
-  console.log('   私密收件箱 : http://localhost:' + CONFIG.port + '/inbox?key=' + CONFIG.secret);
-  console.log('   （把私密收件箱地址保存到书签，仅你自己打开）\n');
+  console.log('   私密收件箱 : http://localhost:' + CONFIG.port + '/inbox?key=' + CONFIG.secret + '\n');
 });
