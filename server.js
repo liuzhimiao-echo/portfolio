@@ -33,16 +33,22 @@ function loadConfig() {
     try { fs.writeFileSync(CONFIG_PATH, JSON.stringify(cfg, null, 2)); } catch (e) {}
     console.log('\n[config] 已自动生成私密收件箱密钥，已写入 msg-config.json');
   }
-  cfg.email = cfg.email || { enabled: false };
-  // 邮箱配置：环境变量优先（部署时通过平台 Variables 注入，避免写入仓库）
-  if (process.env.EMAIL_TO) {
+  cfg.email = cfg.email || {};
+// 邮箱配置：任一 EMAIL_* 环境变量都触发合并，不再以 EMAIL_TO 为门控（之前漏判导致 user/pass 没读到）
+const EMAIL_ENV_KEYS = ['EMAIL_PROVIDER','EMAIL_TO','EMAIL_USER','EMAIL_PASS','EMAIL_FROM'];
+const hasEmailEnv = EMAIL_ENV_KEYS.some(k => process.env[k] !== undefined);
+if (hasEmailEnv || process.env.EMAIL_ENABLED !== undefined) {
+  if (process.env.EMAIL_ENABLED !== undefined) {
     cfg.email.enabled = process.env.EMAIL_ENABLED !== 'false';
-    cfg.email.provider = process.env.EMAIL_PROVIDER || cfg.email.provider || 'qq';
-    cfg.email.to = process.env.EMAIL_TO;
-    cfg.email.user = process.env.EMAIL_USER || cfg.email.user;
-    cfg.email.from = process.env.EMAIL_FROM || cfg.email.from;
-    cfg.email.pass = process.env.EMAIL_PASS || cfg.email.pass;
+  } else if (hasEmailEnv && cfg.email.enabled === undefined) {
+    cfg.email.enabled = true;
   }
+  cfg.email.provider = process.env.EMAIL_PROVIDER || cfg.email.provider || 'qq';
+  cfg.email.to       = process.env.EMAIL_TO       || cfg.email.to;
+  cfg.email.user     = process.env.EMAIL_USER     || cfg.email.user     || cfg.email.to;
+  cfg.email.from     = process.env.EMAIL_FROM     || cfg.email.from     || cfg.email.user;
+  cfg.email.pass     = process.env.EMAIL_PASS     || cfg.email.pass;
+}
   return cfg;
 }
 const CONFIG = loadConfig();
