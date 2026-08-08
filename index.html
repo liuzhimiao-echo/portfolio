@@ -150,15 +150,19 @@ mix-blend-mode:screen;animation:raysShift 16s ease-in-out infinite}
 .about-photo{position:relative;top:clamp(10px,4vh,60px)}
 .about-photo .life-photo{position:relative;left:auto;bottom:auto;width:100%;max-width:340px;opacity:1;transform:none;animation:photoBreath 6s ease-in-out infinite}
 .about-photo .life-tag{position:relative;left:auto;bottom:auto;margin-top:20px;opacity:1;animation:none}
-.about-right{position:relative}
-.about-head{max-width:680px;margin-bottom:60px}
-.about-head .sec-title{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
-.tag-cloud{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center}
+/* 右侧分上下两部分：上文（2 行文字）+ 下文（标签云） */
+.about-right{display:flex;flex-direction:column;gap:clamp(36px,5vh,64px)}
+.about-head{max-width:640px;margin:0}
+/* 标题限定宽度 + 字号调到刚好填满右栏上半，不溢出、保持 2 行 */
+.about-head .sec-title{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;max-width:640px;font-size:clamp(26px,3.2vw,40px);line-height:1.3;letter-spacing:-.5px;margin-bottom:0}
+.about-head .eyebrow{margin-bottom:18px;display:block}
+/* 标签云占右栏下半：高度自适应，不再用 60vh 撑大半屏 */
+.tag-cloud{position:relative;min-height:auto;display:flex;align-items:center;justify-content:center;padding:clamp(20px,4vh,40px) 0}
 .cloud-tag{position:absolute;padding:14px 26px;border-radius:100px;font-size:clamp(14px,1.4vw,17px);color:var(--text);background:rgba(255,255,255,.05);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);white-space:nowrap;animation:cloudFloat var(--d,6s) ease-in-out infinite;animation-delay:var(--del,0s);transition:transform .35s var(--ease),border-color .3s,background .3s,color .3s;cursor:default}
 .cloud-tag:hover{transform:scale(1.08) translateY(-4px);border-color:color-mix(in srgb,var(--water) 50%,transparent);background:rgba(106,176,214,.1);color:var(--water-2)}
 @keyframes cloudFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 .cloud-tag.warm:hover{border-color:var(--pink);background:rgba(217,122,154,.1);color:var(--pink)}
-.about-foot{margin-top:80px;color:var(--dim);font-size:14px;display:flex;align-items:center;gap:12px}
+.about-foot{margin-top:clamp(20px,4vh,40px);color:var(--dim);font-size:14px;display:flex;align-items:center;gap:12px}
 .about-foot .arrow{color:var(--water)}
 @media(max-width:760px){
   .about-grid{grid-template-columns:1fr}
@@ -256,6 +260,26 @@ footer{padding:36px clamp(20px,5vw,48px);border-top:1px solid var(--border);disp
 a:focus-visible,button:focus-visible{outline:2px solid var(--water);outline-offset:3px;border-radius:8px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}#whale,.bp-frame,.about-bubble{opacity:1;animation:none}}
 @media (max-width:720px){.hero{background:radial-gradient(ellipse at 50% 40%,#1a1c25 0%,#0f1016 80%)}}
+
+/* —— editorial: two-column accordion (风琴褶皱) —— */
+.editorial-cols{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+@media(max-width:780px){.editorial-cols{grid-template-columns:1fr;gap:40px}}
+.ed-col-title{font-family:"Space Grotesk","Noto Serif SC";font-size:14px;letter-spacing:2px;color:var(--dim);margin:0 0 14px;text-transform:uppercase}
+.accordion{display:flex;gap:10px;height:460px}
+.fold{position:relative;flex:1 1 0;min-width:0;margin:0;padding:0;border:0;border-radius:16px;background-size:cover;background-position:center;cursor:pointer;overflow:hidden;transition:flex .55s var(--ease),filter .4s;filter:saturate(.82) brightness(.8)}
+.fold:first-child{flex:2.6}
+.fold:hover,.fold.active{flex:4.5;filter:saturate(1) brightness(1)}
+.fold-cap{position:absolute;left:0;right:0;bottom:0;padding:16px 16px;font-size:13px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.62));opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;pointer-events:none;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fold:hover .fold-cap,.fold.active .fold-cap{opacity:1;transform:none}
+/* —— lightbox —— */
+.lightbox{position:fixed;inset:0;z-index:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(8,10,16,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;transition:opacity .3s}
+.lightbox.show{opacity:1}
+.lightbox[hidden]{display:none}
+.lightbox img{max-width:90vw;max-height:78vh;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.6)}
+.lb-cap{color:var(--text);font-size:14px;letter-spacing:.5px}
+.lb-close{position:absolute;top:22px;right:26px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#fff;font-size:16px;cursor:pointer}
+.lb-close:hover{background:rgba(255,255,255,.16)}
+.social-note{color:var(--dim);font-size:14px}
 </style>
 </head>
 <body>
@@ -264,8 +288,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--water);outline-offs
   <a class="brand" href="#hero"><span class="dot"></span>portfolio</a>
   <div class="nav-links">
     <a href="#about">关于</a>
-    <a href="#ai">AI 项目</a>
-    <a href="#campus">校园</a>
+    <a href="#ai">AI探索项目</a>
+    <a href="#campus">校园经历</a>
     <a href="#editorial">图文</a>
     <a href="#video">视频</a>
     <a href="#contact">联系</a>
@@ -356,29 +380,37 @@ SPACE"></span>
   <div class="wrap about-grid">
     <aside class="about-photo reveal">
       <img class="life-photo" src="images/life.jpg" alt="生活照" />
-      <div class="life-tag">✦ <b>我</b> · 一点小故事</div>
+      <div class="life-tag">Beauty · Culture · Explore</div>
     </aside>
     <div class="about-right">
       <div class="about-head reveal">
         <span class="eyebrow">关于 · 我</span>
         <h2 class="sec-title">一个在水蓝色世界里慢慢生长的人。</h2>
-        <p style="color:var(--dim);font-size:16.5px;max-width:600px">设计 / AI / 字体排版 / 摄影 / 视频 / 偶尔的白日梦。这些标签是我——也是正在成为的我。</p>
       </div>
       <div class="tag-cloud reveal" id="tagCloud">
-        <span class="cloud-tag" data-i="0">📷 摄影</span>
-        <span class="cloud-tag" data-i="1">🤖 研究 AI</span>
-        <span class="cloud-tag" data-i="2">🅰 字体排版控</span>
-        <span class="cloud-tag warm" data-i="3">一半 E 一半 I</span>
-        <span class="cloud-tag warm" data-i="4">打不死</span>
-        <span class="cloud-tag warm" data-i="5">减肥事业：失败</span>
-        <span class="cloud-tag" data-i="6">🎬 生活 vlog</span>
-        <span class="cloud-tag" data-i="7">深夜手作人</span>
-        <span class="cloud-tag" data-i="8">玻璃拟态爱好者</span>
-        <span class="cloud-tag" data-i="9">水蓝色鲸鱼</span>
-        <span class="cloud-tag" data-i="10">细节控</span>
-        <span class="cloud-tag warm" data-i="11">偶尔文艺</span>
-        <span class="cloud-tag" data-i="12">校园进行中</span>
-        <span class="cloud-tag" data-i="13">🪴 慢就是快</span>
+        <span class="cloud-tag" data-i="0">摄影</span>
+        <span class="cloud-tag" data-i="1">研究 AI</span>
+        <span class="cloud-tag" data-i="2">字体排版控</span>
+        <span class="cloud-tag" data-i="3">生活 vlog</span>
+        <span class="cloud-tag" data-i="4">手作人</span>
+        <span class="cloud-tag" data-i="5">水蓝色鲸鱼</span>
+        <span class="cloud-tag" data-i="6">细节控</span>
+        <span class="cloud-tag warm" data-i="7">半I半E</span>
+        <span class="cloud-tag warm" data-i="8">减肥半道崩殂ing</span>
+        <span class="cloud-tag" data-i="9">美妆</span>
+        <span class="cloud-tag" data-i="10">Vibe Coding 探索中</span>
+        <span class="cloud-tag" data-i="11">执行力强</span>
+        <span class="cloud-tag" data-i="12">J人</span>
+        <span class="cloud-tag" data-i="13">学东西快</span>
+        <span class="cloud-tag" data-i="14">审美好</span>
+        <span class="cloud-tag warm" data-i="15">喜欢探索</span>
+        <span class="cloud-tag warm" data-i="16">射手座</span>
+        <span class="cloud-tag" data-i="17">喜欢艺术</span>
+        <span class="cloud-tag" data-i="18">美学作品</span>
+        <span class="cloud-tag warm" data-i="19">恐怖片爱好者</span>
+        <span class="cloud-tag" data-i="20">密室逃脱</span>
+        <span class="cloud-tag warm" data-i="21">剧本杀爱好者</span>
+        <span class="cloud-tag" data-i="22">低能量旅行</span>
       </div>
       <div class="about-foot reveal d2"><span>下滑查看 AI 项目 <span class="arrow">→</span></span></div>
     </div>
@@ -470,7 +502,6 @@ SPACE"></span>
     <div class="gallery">
       <figure class="g-item reveal" style="--ar:3/4;--bd:.0s"><img src="images/campus-1.jpg" alt=""><figcaption class="cap"><b>Cos · 精灵</b><span>2025</span></figcaption></figure>
       <figure class="g-item reveal d1" style="--ar:3/4;--bd:.3s"><img src="images/campus-2.jpg" alt=""><figcaption class="cap"><b>汉服</b><span>2024</span></figcaption></figure>
-      <figure class="g-item reveal d2" style="--ar:3/4;--bd:.6s"><img src="images/campus-3.jpg" alt=""><figcaption class="cap"><b>阅读</b><span>2024</span></figcaption></figure>
       <figure class="g-item reveal d1" style="--ar:4/3;--bd:.9s"><img src="images/campus-4.jpg" alt=""><figcaption class="cap"><b>Cos · 暗黑</b><span>2025</span></figcaption></figure>
       <figure class="g-item reveal d2" style="--ar:4/3;--bd:1.2s"><img src="images/campus-5.jpg" alt=""><figcaption class="cap"><b>笔记 · 玩具外企</b><span>2025</span></figcaption></figure>
       <figure class="g-item reveal d3" style="--ar:4/3;--bd:1.5s"><img src="images/campus-6.jpg" alt=""><figcaption class="cap"><b>笔记 · 英国外企</b><span>2025</span></figcaption></figure>
@@ -481,15 +512,26 @@ SPACE"></span>
 <section id="editorial">
   <div class="wrap">
     <div class="gallery-head reveal">
-      <div><span class="eyebrow">图文 · 字体排版</span><h2 class="sec-title">有呼吸感的内容。</h2></div>
-      <p class="sec-sub">微信 / 小红书图文——标题、留白、字体与节奏。</p>
+      <div><span class="eyebrow">图文 · 摄影与排版</span><h2 class="sec-title">关于呼吸感——</h2></div>
+      <p class="sec-sub">左侧摄影，右侧图文排版。鼠标滑过展开，点击放大。</p>
     </div>
-    <div class="gallery" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
-      <figure class="g-item reveal" style="--ar:9/16;--bd:.0s"><img src="images/editorial-1.jpg" alt=""><figcaption class="cap"><b>野外冷雨</b><span>微信</span></figcaption></figure>
-      <figure class="g-item reveal d1" style="--ar:9/16;--bd:.3s"><img src="images/editorial-2.jpg" alt=""><figcaption class="cap"><b>财经频道 · 雨</b><span>微信</span></figcaption></figure>
-      <figure class="g-item reveal d2" style="--ar:9/16;--bd:.6s"><img src="images/editorial-3.jpg" alt=""><figcaption class="cap"><b>莫负春光</b><span>小红书</span></figcaption></figure>
-      <figure class="g-item reveal d3" style="--ar:9/16;--bd:.9s"><img src="images/editorial-3.jpg" alt=""><figcaption class="cap"><b>春 · 春</b><span>小红书</span></figcaption></figure>
-      <figure class="g-item reveal d2" style="--ar:9/16;--bd:1.2s"><img src="images/editorial-5.jpg" alt=""><figcaption class="cap"><b>财经频道排版</b><span>微信</span></figcaption></figure>
+    <div class="editorial-cols">
+      <div class="ed-col">
+        <h3 class="ed-col-title">摄影</h3>
+        <div class="accordion" data-acc>
+          <button class="fold" data-src="images/campus-3.jpg" data-cap="阅读 · 2024" style="background-image:url(images/campus-3.jpg)"><span class="fold-cap">阅读 · 2024</span></button>
+          <button class="fold" data-src="images/editorial-1.jpg" data-cap="野外冷雨 · 微信" style="background-image:url(images/editorial-1.jpg)"><span class="fold-cap">野外冷雨 · 微信</span></button>
+          <button class="fold" data-src="images/editorial-5.jpg" data-cap="财经频道排版 · 微信" style="background-image:url(images/editorial-5.jpg)"><span class="fold-cap">财经频道排版 · 微信</span></button>
+        </div>
+      </div>
+      <div class="ed-col">
+        <h3 class="ed-col-title">图文排版</h3>
+        <div class="accordion" data-acc>
+          <button class="fold" data-src="images/editorial-2.jpg" data-cap="财经频道 · 雨 · 微信" style="background-image:url(images/editorial-2.jpg)"><span class="fold-cap">财经频道 · 雨 · 微信</span></button>
+          <button class="fold" data-src="images/editorial-3.jpg" data-cap="莫负春光 · 小红书" style="background-image:url(images/editorial-3.jpg)"><span class="fold-cap">莫负春光 · 小红书</span></button>
+          <button class="fold" data-src="images/editorial-4.jpg" data-cap="春 · 春 · 小红书" style="background-image:url(images/editorial-4.jpg)"><span class="fold-cap">春 · 春 · 小红书</span></button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -497,7 +539,7 @@ SPACE"></span>
 <section id="video">
   <div class="wrap">
     <div class="gallery-head reveal">
-      <div><span class="eyebrow">视频 · vlog</span><h2 class="sec-title">日常生活，一部可以反复看的小电影。</h2></div>
+      <div><span class="eyebrow">视频 · vlog</span><h2 class="sec-title">剪映熟手、pr新手……</h2></div>
     </div>
     <div class="video-wrap">
       <a class="video-card reveal" href="https://www.xiaohongshu.com/explore/69be90e500000000210109d2?xsec_token=AB-LPfIFTEFDw0oLtzgJ720s3rOzWgJFXhbImS_Ai5_cw=&xsec_source=pc_search" target="_blank" rel="noopener" aria-label="open vlog on xiaohongshu">
@@ -519,13 +561,9 @@ SPACE"></span>
     <span class="eyebrow">感谢滑动 · 尾声</span>
     <h2 class="sec-title">感谢观看，<br><span class="grad">让我们一起做点什么。</span></h2>
     <p>无论是项目、想法，还是只想聊聊——给我留言吧。</p>
-    <a class="email" href="mailto:hello@yourname.dev">hello@yourname.dev</a>
+    <a class="email" href="mailto:3132938961@qq.com">3132938961@qq.com</a>
     <div class="socials">
-      <a href="https://www.xiaohongshu.com/explore/69be90e500000000210109d2?xsec_token=AB-LPfIFTEFDw0oLtzgJ720s3rOzWgJFXhbImS_Ai5_cw=&xsec_source=pc_search" target="_blank" rel="noopener">xiaohongshu</a>
-      <a href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg" target="_blank" rel="noopener">feishu</a>
-      <a href="#">dribbble</a>
-      <a href="#">behance</a>
-      <a href="#">instagram</a>
+      <span class="social-note">暂不公开。可以留言 直通我的邮箱~</span>
     </div>
   </div>
 </section>
@@ -536,6 +574,12 @@ SPACE"></span>
   <span>© 2026 · 用一点水蓝、一点灰，和很多热爱做成。</span>
   <span>HTML / CSS / SVG · 无框架</span>
 </footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" id="lbClose" aria-label="close">✕</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+</div>
 
 <button class="msg-bubble" id="msgBubble" aria-label="leave a message"><span class="pulse"></span>Leave a message</button>
 <div class="msg-overlay" id="msgOverlay" hidden>
@@ -1060,6 +1104,25 @@ SPACE"></span>
       status.textContent='留言服务未连接，请稍后再试';status.className='msg-status err';
     }finally{send.disabled=false;}
   });
+})();
+</script>
+<script>
+/* —— editorial accordion + lightbox —— */
+(function(){
+  const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
+  function openLB(src,cap){lbImg.src=src;lbCap.textContent=cap;lb.hidden=false;requestAnimationFrame(()=>lb.classList.add('show'));}
+  function closeLB(){lb.classList.remove('show');setTimeout(()=>lb.hidden=true,300);}
+  document.querySelectorAll('[data-acc]').forEach(acc=>{
+    const folds=acc.querySelectorAll('.fold');
+    folds.forEach(f=>{
+      f.addEventListener('click',()=>openLB(f.dataset.src,f.dataset.cap));
+      f.addEventListener('mouseenter',()=>folds.forEach(x=>x.classList.toggle('active',x===f)));
+    });
+    acc.addEventListener('mouseleave',()=>folds.forEach(x=>x.classList.remove('active')));
+  });
+  document.getElementById('lbClose').addEventListener('click',closeLB);
+  lb.addEventListener('click',e=>{if(e.target===lb)closeLB();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!lb.hidden)closeLB();});
 })();
 </script>
 </body>
