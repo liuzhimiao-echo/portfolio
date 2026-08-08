@@ -66,7 +66,7 @@ function saveMessages() {
 // ---------- 邮件转发 ----------
 // 常见邮箱服务商的 SMTP 预设（在 msg-config.json 设 provider 即可自动填 host/port/secure）
 const SMTP_PRESETS = {
-  qq:      { host: 'smtp.qq.com',          port: 465, secure: true },
+  qq:      { host: 'smtp.qq.com',          port: 587, secure: false },
   '163':   { host: 'smtp.163.com',         port: 465, secure: true },
   gmail:   { host: 'smtp.gmail.com',       port: 465, secure: true },
   outlook: { host: 'smtp.office365.com',   port: 587, secure: false },
