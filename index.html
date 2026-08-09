@@ -1240,7 +1240,8 @@ SPACE"></span>
   const textI=document.getElementById('msgText');
   const send=document.getElementById('msgSend');
   const status=document.getElementById('msgStatus');
-  const ENDPOINT=window.MSG_ENDPOINT||'/api/msg';
+  const ENDPOINT=window.MSG_ENDPOINT||'';        // 后端表单地址（如 Formspree: https://formspree.io/f/xxxx）；留空则走 mailto 兜底
+  const OWNER_EMAIL=window.MSG_EMAIL||'';        // 创建者邮箱，用于 mailto 兜底（访客留言直接发到你邮箱）
   let lastFocus=null;
   function openModal(){lastFocus=document.activeElement;overlay.hidden=false;requestAnimationFrame(()=>overlay.classList.add('show'));setTimeout(()=>textI.focus(),60);}
   function shut(){overlay.classList.remove('show');setTimeout(()=>{overlay.hidden=true;status.textContent='';status.className='msg-status';},350);if(lastFocus)lastFocus.focus();}
@@ -1261,13 +1262,33 @@ SPACE"></span>
     if(!t){status.textContent='请先写点什么吧';status.className='msg-status err';return;}
     send.disabled=true;status.textContent='发送中…';status.className='msg-status';
     try{
-      const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:nameI.value.trim(),text:t})});
-      if(!res.ok)throw new Error('http '+res.status);
-      status.textContent='已送达，谢谢你 ✦';status.className='msg-status ok';
-      textI.value='';nameI.value='';
-      setTimeout(shut,1500);
+      // 1) 配置了后端端点（Formspree 等）→ POST 提交
+      if(ENDPOINT){
+        const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:nameI.value.trim(),text:t})});
+        if(!res.ok)throw new Error('http '+res.status);
+        status.textContent='已送达，谢谢你 ✦';status.className='msg-status ok';
+        textI.value='';nameI.value='';
+        setTimeout(shut,1500);
+        return;
+      }
+      // 2) 未配后端但有创建者邮箱 → mailto 兜底（静态站点无需服务器，访客邮件客户端直接发到你邮箱）
+      if(OWNER_EMAIL){
+        const who=nameI.value.trim();
+        const subj='作品集留言'+(who?(' · 来自 '+who):'');
+        const body=(who?('称呼：'+who+'\n'):'')+t;
+        window.location.href='mailto:'+OWNER_EMAIL+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+        status.textContent='已为你打开邮件，发送即可送达 ✦';status.className='msg-status ok';
+        textI.value='';nameI.value='';
+        setTimeout(shut,1800);
+        return;
+      }
+      // 3) 两者都未配置 → 明确提示而非误导性"服务未连接"
+      throw new Error('no-config');
     }catch(err){
-      status.textContent='留言服务未连接，请稍后再试';status.className='msg-status err';
+      status.textContent=(err&&err.message==='no-config')
+        ? '留言服务未配置：请提供邮箱或 Formspree 地址'
+        : '发送失败，请稍后再试或改用邮件联系';
+      status.className='msg-status err';
     }finally{send.disabled=false;}
   });
 })();
