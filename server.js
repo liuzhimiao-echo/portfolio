@@ -195,6 +195,13 @@ const server = http.createServer(async (req, res) => {
   const u = url.parse(req.url, true);
   const p = u.pathname;
 
+  // 允许跨域（GitHub Pages 等静态前端可调用 /api/msg）；同时放行预检 OPTIONS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, { 'Access-Control-Allow-Methods': 'POST,OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' });
+    return res.end();
+  }
+
   if (p === '/api/msg' && req.method === 'POST') {
     let body = '';
     req.on('data', d => { body += d; if (body.length > 1e6) req.destroy(); });

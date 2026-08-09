@@ -1235,8 +1235,8 @@ SPACE"></span>
 /* —— 留言配置 —— 把邮箱改成你自己的即可；留空则发送时显示「未配置」提示。
    也可改用 Formspree：把 window.MSG_ENDPOINT 设为你的表单地址（https://formspree.io/f/xxxx），
    优先级高于 mailto，访客无需邮件客户端即可提交。 */
-window.MSG_EMAIL='3132938961@qq.com';
-window.MSG_ENDPOINT='';
+window.MSG_EMAIL='3132938961@qq.com';   // mailto 兜底：无后端时访客邮件客户端直接发到你邮箱
+window.MSG_ENDPOINT='/api/msg';          // 默认相对路径：整站部署在 Railway 时由 server.js 接收并用 Resend 发邮件（访客无需登录）；若用 GitHub Pages+独立 API，改成完整 URL
 </script>
 <script>
 (function(){
@@ -1269,14 +1269,16 @@ window.MSG_ENDPOINT='';
     if(!t){status.textContent='请先写点什么吧';status.className='msg-status err';return;}
     send.disabled=true;status.textContent='发送中…';status.className='msg-status';
     try{
-      // 1) 配置了后端端点（Formspree 等）→ POST 提交
+      // 1) 后端端点（自建 server.js 的 /api/msg 或 Formspree）→ POST；失败则降级到 mailto 兜底
       if(ENDPOINT){
-        const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:nameI.value.trim(),text:t})});
-        if(!res.ok)throw new Error('http '+res.status);
-        status.textContent='已送达，谢谢你 ✦';status.className='msg-status ok';
-        textI.value='';nameI.value='';
-        setTimeout(shut,1500);
-        return;
+        try{
+          const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:nameI.value.trim(),text:t})});
+          if(!res.ok)throw new Error('http '+res.status);
+          status.textContent='已送达，谢谢你 ✦';status.className='msg-status ok';
+          textI.value='';nameI.value='';
+          setTimeout(shut,1500);
+          return;
+        }catch(e){ /* 端点不可用，继续走 mailto 兜底 */ }
       }
       // 2) 未配后端但有创建者邮箱 → mailto 兜底（静态站点无需服务器，访客邮件客户端直接发到你邮箱）
       if(OWNER_EMAIL){
