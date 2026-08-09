@@ -29,10 +29,9 @@ function loadConfig() {
     console.log('\n[config] 已自动生成私密收件箱密钥');
   }
   cfg.email = cfg.email || {};
-  if (process.env.EMAIL_TO) {
-    cfg.email.to = process.env.EMAIL_TO;
-    if (process.env.EMAIL_FROM) cfg.email.from = process.env.EMAIL_FROM;
-  }
+  // 收件邮箱：优先环境变量，缺省回退到创建者邮箱（避免漏配导致留言只存本地）
+  cfg.email.to = process.env.EMAIL_TO || '3132938961@qq.com';
+  if (process.env.EMAIL_FROM) cfg.email.from = process.env.EMAIL_FROM;
   return cfg;
 }
 const CONFIG = loadConfig();
