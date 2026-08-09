@@ -151,7 +151,9 @@ mix-blend-mode:screen;animation:raysShift 16s ease-in-out infinite}
 .about{padding-top:clamp(90px,13vh,150px)}
 .about-grid{display:grid;grid-template-columns:minmax(200px,30%) 1fr;gap:clamp(28px,5vw,72px);align-items:start}
 .about-photo{position:relative;top:clamp(10px,4vh,60px);display:flex;flex-direction:column;align-items:flex-start}
-.about-photo .life-photo{position:relative;left:auto;bottom:auto;width:100%;max-width:340px;opacity:1;transform:none;animation:photoBreath 6s ease-in-out infinite}
+.about-photo .photo-stack{position:relative;width:100%;max-width:340px;aspect-ratio:3/4;border-radius:var(--radius);margin:0 auto;user-select:none;-webkit-tap-highlight-color:transparent;overflow:visible}
+.ps-card{position:absolute;top:50%;left:50%;width:66%;aspect-ratio:3/4;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);cursor:pointer;transition:transform .5s var(--ease),opacity .5s var(--ease),filter .5s var(--ease),z-index 0s;will-change:transform,opacity;transform:translate(-50%,-50%) translate(var(--tx,0px),var(--ty,0px)) rotate(var(--rot,0deg)) scale(var(--scale,1));opacity:var(--op,1)}
+.ps-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .about-photo .life-tag{position:relative;left:auto;bottom:auto;margin-top:22px;opacity:1;animation:none;width:100%;text-align:center;font-size:14px;letter-spacing:2.5px;color:var(--text);font-weight:500}
 /* 右侧分上下两部分：上文（2 行文字）+ 下文（标签云） */
 .about-right{display:flex;flex-direction:column;gap:clamp(36px,5vh,64px)}
@@ -177,7 +179,7 @@ mix-blend-mode:screen;animation:raysShift 16s ease-in-out infinite}
   main{margin-left:0}
   .about-grid{grid-template-columns:1fr}
   .about-photo{position:relative;top:0;margin-bottom:34px}
-  .about-photo .life-photo{max-width:300px}
+  .about-photo .photo-stack{max-width:300px}
 }
 
 /* —— AI PROJECTS —— */
@@ -205,7 +207,8 @@ mix-blend-mode:screen;animation:raysShift 16s ease-in-out infinite}
 .ai-tabs button.on{color:var(--text)}
 .ai-tabs button.on::after{content:"";position:absolute;left:20px;right:20px;bottom:-1px;height:2px;background:var(--grad)}
 .ai-panel{display:none;padding:36px}
-.ai-panel.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:36px;align-items:start}
+/* 文字区更宽、原型区更窄，减小原型显示面积、让说明与要点更完整呈现 */
+.ai-panel.on{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:36px;align-items:start}
 @media (max-width:820px){.ai-panel.on{grid-template-columns:1fr;gap:24px}}
 .ai-panel-text h4{font-family:"Space Grotesk";font-size:13px;letter-spacing:2px;color:var(--water);margin-bottom:10px}
 .ai-panel-text h3{font-family:"Space Grotesk","Noto Serif SC";font-size:24px;font-weight:600;letter-spacing:-.5px;margin-bottom:14px}
@@ -213,11 +216,18 @@ mix-blend-mode:screen;animation:raysShift 16s ease-in-out infinite}
 .ai-panel-text ul{color:var(--dim);font-size:14px;margin:14px 0 18px 18px;line-height:1.8}
 .ai-panel-text .open-btn{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:11px 22px;border-radius:100px;background:var(--grad);color:#0b1018;font-weight:600;font-size:13px;transition:transform .3s var(--ease),box-shadow .3s}
 .ai-panel-text .open-btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px var(--glow)}
-.ai-embed{position:relative;border-radius:14px;overflow:hidden;background:var(--bg);border:1px solid var(--border);min-height:480px}
-.ai-embed iframe{width:100%;height:480px;border:0;display:block;background:#fff}
+.ai-embed{position:relative;border-radius:14px;overflow:hidden;background:var(--bg);border:1px solid var(--border);min-height:340px}
+/* 原型预览高度随视口自适应，整体比原来更矮，避免占据过多版面 */
+.ai-embed iframe{width:100%;height:clamp(340px,46vh,420px);border:0;display:block;background:#fff}
+@media (max-width:820px){.ai-embed{min-height:300px}.ai-embed iframe{height:clamp(300px,52vh,380px)}}
+@media (max-width:520px){.ai-embed iframe{height:300px}}
 .ai-embed .note{position:absolute;top:12px;left:12px;right:12px;padding:10px 14px;border-radius:10px;background:rgba(11,16,24,.82);backdrop-filter:blur(8px);font-size:12px;color:var(--water-2);display:flex;align-items:center;gap:8px;z-index:2}
 .ai-embed .note a{color:var(--water);text-decoration:underline}
 .ai-embed .note a:hover{color:#fff}
+/* 缩放模式：把原型界面等比缩小，在更小的框里看到更完整的界面（用于项目 02 本地原型） */
+.ai-embed.scaled iframe{width:142.86%;height:calc(clamp(340px,46vh,420px) * 1.4286);transform:scale(.7);transform-origin:top left}
+@media (max-width:820px){.ai-embed.scaled iframe{height:calc(clamp(300px,52vh,380px) * 1.4286)}}
+@media (max-width:520px){.ai-embed.scaled iframe{height:calc(300px * 1.4286)}}
 .ai-panel.manual{display:flex;align-items:center;justify-content:center;min-height:420px;text-align:center}
 .ai-panel.manual .empty{color:var(--dim)}
 .ai-panel.manual .empty .icon{font-size:42px;color:var(--water);opacity:.6;margin-bottom:14px;display:block}
@@ -385,7 +395,7 @@ SPACE"></span>
 <section id="about" class="about">
   <div class="wrap"><div class="about-grid">
     <aside class="about-photo reveal">
-      <img class="life-photo" src="images/life.jpg" alt="生活照" />
+      <div class="photo-stack" id="aboutPhotoStack" aria-label="个人生活照片墙 · 悬停置顶"></div>
       <div class="life-tag">Beauty · Culture · Explore</div>
     </aside>
     <div class="about-right">
@@ -443,17 +453,17 @@ SPACE"></span>
           <div class="cta">查看详情 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
         </div>
       </button>
-      <div class="ai-card coming reveal d1">
+      <button class="ai-card reveal d1" data-project="p2">
         <div>
           <div class="num">项目 · 02</div>
-          <h3>更多 · 敬请期待</h3>
-          <p>把零散的想法变成可演示的原型。</p>
+          <h3>竞情 Intelli · AI 竞品分析</h3>
+          <p>把「找竞品→采数据→出洞察→写报告→持续监控」压成一条人机协同的情报流水线：自动为主、人工兜底、证据可溯源。</p>
         </div>
         <div>
-          <div class="meta"><span class="pill">敬请期待</span></div>
-          <div class="cta" style="color:var(--dim)">敬请期待 ✦</div>
+          <div class="meta"><span class="pill">原型</span><span class="pill">AI</span><span class="pill">PRD</span></div>
+          <div class="cta">查看详情 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
         </div>
-      </div>
+      </button>
       <div class="ai-card coming reveal d2">
         <div>
           <div class="num">项目 · 03</div>
@@ -475,26 +485,26 @@ SPACE"></span>
       </div>
       <div class="ai-panel on" data-panel="prd">
         <div class="ai-panel-text">
-          <h4>项目 01 · PRD</h4>
-          <h3>智能交互原型</h3>
-          <p>一次关于“自然交互”的探索——让机器像一个懂得何时停顿、回应、留白的伙伴。</p>
-          <ul>
+          <h4 id="prdKicker">项目 01 · PRD</h4>
+          <h3 id="prdTitle">智能交互原型</h3>
+          <p id="prdLead">一次关于“自然交互”的探索——让机器像一个懂得何时停顿、回应、留白的伙伴。</p>
+          <ul id="prdList">
             <li>目标：在飞书文档中维护原型 / PRD / 可用性笔记</li>
             <li>重点：交互原型 · 微动效 · UX 设计</li>
             <li>状态：v0.3 进行中</li>
           </ul>
-          <p style="font-size:13px;color:var(--dim);opacity:.8">※ 占位文字——请替换为真实 PRD。</p>
-          <a class="open-btn" href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg" target="_blank" rel="noopener">打开飞书原型 →</a>
+          <p id="prdNote" style="font-size:13px;color:var(--dim);opacity:.8">※ 占位文字——请替换为真实 PRD。</p>
+          <a id="prdBtn" class="open-btn" href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg" target="_blank" rel="noopener">打开飞书原型 →</a>
         </div>
-        <div class="ai-embed">
-          <div class="note">⚠ 飞书限制 X-Frame。若预览为空白，
+        <div class="ai-embed" id="prdEmbed">
+          <div class="note" id="prdEmbedNote">⚠ 飞书限制 X-Frame。若预览为空白，
             <a href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg#share-MnOUd7eC9osu7yxMFI3cYB4Snpc" target="_blank" rel="noopener">点此打开 →</a>
           </div>
-          <iframe src="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg#share-MnOUd7eC9osu7yxMFI3cYB4Snpc" referrerpolicy="no-referrer" loading="lazy" title="feishu prototype preview"></iframe>
+          <iframe id="prdIframe" src="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg#share-MnOUd7eC9osu7yxMFI3cYB4Snpc" referrerpolicy="no-referrer" loading="lazy" title="feishu prototype preview"></iframe>
         </div>
       </div>
       <div class="ai-panel manual" data-panel="manual">
-        <div class="empty"><span class="icon">✦</span><h4>使用说明</h4><p>内容建设中</p></div>
+        <div class="empty"><span class="icon">✦</span><h4 id="manualTitle">使用说明</h4><p id="manualBody">内容建设中</p></div>
       </div>
     </div>
   </div>
@@ -668,8 +678,86 @@ SPACE"></span>
   const panels=[...detail.querySelectorAll('.ai-panel')];
   function openTab(name){panels.forEach(p=>p.classList.toggle('on',p.dataset.panel===name));tabs.forEach(t=>t.classList.toggle('on',t.dataset.tab===name));}
   tabs.forEach(t=>t.addEventListener('click',()=>{if(t.dataset.tab==='close'){detail.classList.remove('open');return;}openTab(t.dataset.tab);}));
+
+  // 每个项目的详情内容；点击卡片时填充到统一的详情面板
+  const PROJECTS={
+    p1:{
+      kicker:'项目 01 · PRD',
+      title:'智能交互原型',
+      lead:'一次关于“自然交互”的探索——让机器像一个懂得何时停顿、回应、留白的伙伴。',
+      list:[
+        '目标：在飞书文档中维护原型 / PRD / 可用性笔记',
+        '重点：交互原型 · 微动效 · UX 设计',
+        '状态：v0.3 进行中'
+      ],
+      note:'※ 占位文字——请替换为真实 PRD。',
+      btnText:'打开飞书原型 →',
+      btnHref:'https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg',
+      embedSrc:'https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg#share-MnOUd7eC9osu7yxMFI3cYB4Snpc',
+      embedReferrer:'no-referrer',
+      scaled:false,
+      noteHTML:'⚠ 飞书限制 X-Frame。若预览为空白，<a href="https://ccny12967svc.feishu.cn/wiki/VKlCwTNs2ic4Mck3SiFc7w5DnZg#share-MnOUd7eC9osu7yxMFI3cYB4Snpc" target="_blank" rel="noopener">点此打开 →</a>',
+      manualTitle:'使用说明',
+      manualBody:'内容建设中'
+    },
+    p2:{
+      kicker:'项目 02 · PRD',
+      title:'竞情 Intelli · AI 竞品分析自动化工作流',
+      lead:'把“找竞品→采数据→出洞察→写报告→持续监控”压成一条人机协同的情报流水线。核心是从“全自动黑盒”转向“自动为主 + 人工兜底 + 证据可溯源”。',
+      list:[
+        '核心功能：竞品库(全局资产) · 分级采集+人工兜底 · 我方基准对比中心 · 七段式可编辑报告(全量/快速双模式) · 持续监控预警 · HITL审核+证据溯源',
+        '技术栈：React/Next.js · FastAPI · LangGraph/CrewAI · PostgreSQL+向量库 · Playwright · LLM+多模态',
+        '目标用户：产品经理 / 市场运营 / 创业团队 / 投资行研',
+        '开发进度：PRD V2.0 + 可交互原型 V3.0(6页) + 汇报PPT + 动态演示已完成，下一步进入工程化开发落地 MVP',
+        '团队成员：me（独立完成）',
+        '项目链接 / 仓库：本地（原型见右侧，可直接交互）'
+      ],
+      note:'右侧为离线自包含可交互原型，可点击侧边栏切换 6 个页面、搜索、开关、编辑报告。',
+      btnText:'全屏打开可交互原型 →',
+      btnHref:'jingqing-intelli-prototype.html',
+      embedSrc:'jingqing-intelli-prototype.html',
+      embedReferrer:'',
+      scaled:true,
+      noteHTML:'✦ 可交互原型：点侧边栏切页、实时搜索、开关监控、编辑报告。若显示不全，<a href="jingqing-intelli-prototype.html" target="_blank" rel="noopener">新标签页全屏打开 →</a>',
+      manualTitle:'竞情 Intelli · 使用说明',
+      manualBody:'维护竞品信息源 → AI 完成采集/理解/分析 → 关键节点人工审核校正 → 输出可信、可编辑、可持续更新的竞争情报。原型 6 页闭环：工作台 → 竞品库 → 项目详情 → 对比中心 → 可编辑报告 → 监控中心，全部可交互（示例数据，刷新复位）。'
+    }
+  };
+
+  const el={
+    kicker:document.getElementById('prdKicker'),
+    title:document.getElementById('prdTitle'),
+    lead:document.getElementById('prdLead'),
+    list:document.getElementById('prdList'),
+    note:document.getElementById('prdNote'),
+    btn:document.getElementById('prdBtn'),
+    iframe:document.getElementById('prdIframe'),
+    embedNote:document.getElementById('prdEmbedNote'),
+    manualTitle:document.getElementById('manualTitle'),
+    manualBody:document.getElementById('manualBody')
+  };
+  function fill(key){
+    const d=PROJECTS[key]; if(!d) return;
+    el.kicker.textContent=d.kicker;
+    el.title.textContent=d.title;
+    el.lead.textContent=d.lead;
+    el.list.innerHTML=d.list.map(li=>'<li>'+li+'</li>').join('');
+    el.note.textContent=d.note;
+    el.btn.textContent=d.btnText;
+    el.btn.href=d.btnHref;
+    el.embedNote.innerHTML=d.noteHTML;
+    document.getElementById('prdEmbed').classList.toggle('scaled', !!d.scaled);
+    if(d.embedReferrer) el.iframe.setAttribute('referrerpolicy',d.embedReferrer); else el.iframe.removeAttribute('referrerpolicy');
+    el.iframe.src=d.embedSrc;
+    el.manualTitle.textContent=d.manualTitle;
+    el.manualBody.textContent=d.manualBody;
+  }
+
   document.querySelectorAll('.ai-card[data-project]').forEach(card=>{
-    card.addEventListener('click',()=>{detail.classList.add('open');openTab('prd');detail.scrollIntoView({behavior:'smooth',block:'start'});});
+    card.addEventListener('click',()=>{
+      fill(card.dataset.project);
+      detail.classList.add('open');openTab('prd');detail.scrollIntoView({behavior:'smooth',block:'start'});
+    });
   });
 })();
 
@@ -1118,6 +1206,7 @@ SPACE"></span>
 (function(){
   const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
   function openLB(src,cap){lbImg.src=src;lbCap.textContent=cap;lb.hidden=false;requestAnimationFrame(()=>lb.classList.add('show'));}
+  window.openLB=openLB;
   function closeLB(){lb.classList.remove('show');setTimeout(()=>lb.hidden=true,300);}
   document.querySelectorAll('[data-acc]').forEach(acc=>{
     const folds=acc.querySelectorAll('.fold');
@@ -1130,6 +1219,67 @@ SPACE"></span>
   document.getElementById('lbClose').addEventListener('click',closeLB);
   lb.addEventListener('click',e=>{if(e.target===lb)closeLB();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!lb.hidden)closeLB();});
+})();
+</script>
+
+<script>
+/* —— About 生活照片墙：悬停置顶重排 —— */
+(function(){
+  const PHOTOS=[
+    {id:'front', src:'images/life-front.png', cap:'日常 · 默认'},
+    {id:'life1', src:'images/life-1.jpg', cap:'生活 · 1'},
+    {id:'life2', src:'images/life-2.jpg', cap:'生活 · 2'},
+    {id:'life3', src:'images/life-3.jpg', cap:'生活 · 3'},
+    {id:'life4', src:'images/life-4.jpg', cap:'生活 · 4'},
+    {id:'life5', src:'images/life-5.jpg', cap:'生活 · 5'},
+  ];
+  const FAN=[
+    {tx:0,   ty:0,   rot:0,  scale:1,    op:1   },
+    {tx:-14, ty:16,  rot:-5, scale:.95,  op:.78 },
+    {tx:12,  ty:24,  rot:6,  scale:.92,  op:.74 },
+    {tx:-8,  ty:30,  rot:-4, scale:.90,  op:.70 },
+    {tx:16,  ty:18,  rot:5,  scale:.90,  op:.70 },
+    {tx:0,   ty:38,  rot:0,  scale:.88,  op:.68 },
+  ];
+  const slot=i=>FAN[Math.min(i,FAN.length-1)];
+  const stage=document.getElementById('aboutPhotoStack');
+  if(!stage) return;
+  const cards={};
+  let order=PHOTOS.map(p=>p.id);
+  let currentFront=order[0];
+  PHOTOS.forEach(p=>{
+    const el=document.createElement('div');
+    el.className='ps-card';
+    el.dataset.id=p.id;
+    el.innerHTML='<img src="'+p.src+'" alt="'+p.cap+'" '+(p.id==='front'?'loading="eager"':'loading="lazy"')+'>';
+    stage.appendChild(el);
+    cards[p.id]=el;
+    el.addEventListener('click',()=>{ if(window.openLB) window.openLB(p.src,p.cap); });
+  });
+  function render(){
+    order.forEach((id,i)=>{
+      const el=cards[id], s=slot(i);
+      el.style.setProperty('--tx', s.tx+'px');
+      el.style.setProperty('--ty', s.ty+'px');
+      el.style.setProperty('--rot', s.rot+'deg');
+      el.style.setProperty('--scale', s.scale);
+      el.style.setProperty('--op', s.op);
+      el.style.zIndex = order.length - i;
+    });
+  }
+  function bringToFront(id){
+    if(id===currentFront) return;
+    order=[id, ...order.filter(o=>o!==id)];
+    currentFront=id;
+    render();
+  }
+  function resetOrder(){ order=PHOTOS.map(p=>p.id); currentFront=order[0]; render(); }
+  stage.addEventListener('mousemove',(e)=>{
+    const c=e.target.closest('.ps-card');
+    if(c && c.dataset.id!==currentFront) bringToFront(c.dataset.id);
+  });
+  stage.addEventListener('mouseleave', resetOrder);
+  render();
 })();
 </script>
 </body>
