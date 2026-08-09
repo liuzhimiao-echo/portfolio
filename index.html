@@ -1232,6 +1232,13 @@ SPACE"></span>
 })();
 </script>
 <script>
+/* —— 留言配置 —— 把邮箱改成你自己的即可；留空则发送时显示「未配置」提示。
+   也可改用 Formspree：把 window.MSG_ENDPOINT 设为你的表单地址（https://formspree.io/f/xxxx），
+   优先级高于 mailto，访客无需邮件客户端即可提交。 */
+window.MSG_EMAIL='3132938961@qq.com';
+window.MSG_ENDPOINT='';
+</script>
+<script>
 (function(){
   const bubble=document.getElementById('msgBubble');
   const overlay=document.getElementById('msgOverlay');
