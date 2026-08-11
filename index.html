@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>personal portfolio</title>
-<meta name="description" content="portfolio" />
+<title>一个在水蓝色世界里慢慢生长的人 · 作品集</title>
+<meta name="description" content="这是我的作品集——一点水蓝、一点灰，和很多热爱。这里有正在打磨的 AI 产品原型，有镜头下的光影与情绪，还有一座能穿过镜子走进去的爱丽丝奇境。慢慢逛，总有一样会让你停下来。" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" />
@@ -301,16 +301,51 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--water);outline-offs
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}#whale,.bp-frame,.about-bubble{opacity:1;animation:none}}
 @media (max-width:720px){.hero{background:radial-gradient(ellipse at 50% 40%,#1a1c25 0%,#0f1016 80%)}}
 
-/* —— editorial: two-column accordion (风琴褶皱) —— */
-.editorial-cols{display:grid;grid-template-columns:1fr 1fr;gap:34px}
-@media(max-width:780px){.editorial-cols{grid-template-columns:1fr;gap:40px}}
-.ed-col-title{font-family:"Space Grotesk","Noto Serif SC";font-size:14px;letter-spacing:2px;color:var(--dim);margin:0 0 14px;text-transform:uppercase}
-.accordion{display:flex;gap:10px;height:460px}
-.fold{position:relative;flex:1 1 0;min-width:0;margin:0;padding:0;border:0;border-radius:16px;background-size:cover;background-position:center;cursor:pointer;overflow:hidden;transition:flex .55s var(--ease),filter .4s;filter:saturate(.82) brightness(.8)}
-.fold:first-child{flex:2.6}
-.fold:hover,.fold.active{flex:4.5;filter:saturate(1) brightness(1)}
-.fold-cap{position:absolute;left:0;right:0;bottom:0;padding:16px 16px;font-size:13px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.62));opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;pointer-events:none;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fold:hover .fold-cap,.fold.active .fold-cap{opacity:1;transform:none}
+/* —— editorial: H5 竖屏封面 + 摄影跑马灯 —— */
+.h5-cover{position:relative;display:block;width:min(360px,86vw);aspect-ratio:3/4;margin:0 auto;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);cursor:pointer;transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease)}
+.h5-cover:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--water) 50%,transparent);box-shadow:0 34px 80px rgba(0,0,0,.5),0 0 0 1px color-mix(in srgb,var(--water) 22%,transparent) inset}
+.h5-cover__media{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.02);transition:transform 1.2s var(--ease);filter:saturate(1.02)}
+.h5-cover:hover .h5-cover__media{transform:scale(1.08)}
+.h5-cover__scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,.15) 0%,transparent 30%,rgba(10,12,18,.55) 62%,rgba(8,10,16,.9) 100%)}
+.h5-cover__inner{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:clamp(18px,3vw,26px);display:flex;flex-direction:column;gap:10px;text-align:left}
+.h5-cover__eyebrow{font-family:"Space Grotesk";font-size:10px;letter-spacing:2.6px;text-transform:uppercase;color:var(--ice);opacity:.92}
+.h5-cover__title{font-family:"Space Grotesk","Noto Serif SC";font-size:clamp(20px,5vw,26px);font-weight:700;line-height:1.15;color:#fff}
+.h5-cover__title span{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.h5-cover__desc{font-size:12.5px;line-height:1.7;color:rgba(232,233,237,.86)}
+.h5-cover__meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.h5-cover .pill{font-size:10px;letter-spacing:.5px;padding:4px 9px;border-radius:100px;border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.9);backdrop-filter:blur(2px)}
+.h5-cover__cta{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;margin-top:8px;padding:11px 20px;border-radius:100px;font-family:"Space Grotesk";font-size:13px;font-weight:500;color:#fff;background:var(--grad);box-shadow:0 10px 24px rgba(106,176,214,.4);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.h5-cover:hover .h5-cover__cta{transform:translateX(4px);box-shadow:0 14px 32px rgba(106,176,214,.55)}
+.h5-cover__cta svg{transition:transform .35s var(--ease)}
+.h5-cover:hover .h5-cover__cta svg{transform:translateX(3px)}
+
+/* 摄影 · 图文排版：悬浮左右环绕自动循环跑马灯 */
+.marquee{position:relative;margin-top:clamp(34px,5vw,54px)}
+.marquee__viewport{position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee__track{display:flex;width:max-content;gap:22px;padding:14px 0;animation:marqueeScroll 42s linear infinite;will-change:transform}
+.marquee:hover .marquee__track{animation-play-state:paused}
+/* 手动模式：关闭自动动画，用 transform 平滑步进 */
+.marquee[data-mode="manual"] .marquee__track{animation:none;transition:transform .6s var(--ease)}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee__item{position:relative;flex:0 0 auto;width:clamp(180px,22vw,240px);margin:0;border-radius:16px;overflow:hidden;background:var(--surface-2);box-shadow:0 16px 36px rgba(0,0,0,.32);transition:transform .5s var(--ease),box-shadow .5s var(--ease);animation:marqueeFloat 6s ease-in-out infinite}
+.marquee__item:nth-child(even){animation-delay:-3s}
+.marquee__item:nth-child(3n){animation-duration:7.5s}
+.marquee__item img{display:block;width:100%;height:300px;object-fit:cover;filter:saturate(.9) brightness(.86);transition:filter .5s,transform .6s var(--ease)}
+.marquee__item figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 14px;font-size:12px;letter-spacing:.5px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.66));opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.marquee__item:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 26px 56px rgba(0,0,0,.46),0 0 0 1px color-mix(in srgb,var(--water) 30%,transparent) inset;z-index:3}
+.marquee__item:hover img{filter:saturate(1.05) brightness(1);transform:scale(1.05)}
+.marquee__item:hover figcaption{opacity:1;transform:none}
+@keyframes marqueeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+/* —— 跑马灯手动控制按钮 —— */
+.marquee__ctrl{position:absolute;right:0;bottom:calc(100% + 12px);display:flex;gap:10px;z-index:4}
+.marquee__btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--text);background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--border);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 10px 26px rgba(0,0,0,.28);cursor:pointer;transition:transform .3s var(--ease),border-color .3s,background .3s,box-shadow .3s,opacity .3s}
+.marquee__btn svg{width:18px;height:18px}
+.marquee__btn:hover:not(:disabled){transform:translateY(-2px) scale(1.06);border-color:var(--water);background:color-mix(in srgb,var(--water) 22%,var(--surface));box-shadow:0 14px 34px var(--glow)}
+.marquee__btn:active:not(:disabled){transform:translateY(0) scale(.96)}
+.marquee__btn:disabled{opacity:.32;cursor:not-allowed;box-shadow:none}
+.marquee__btn:focus-visible{outline:2px solid var(--water);outline-offset:2px}
+@media (max-width:520px){.marquee__ctrl{position:static;justify-content:center;margin-top:16px}}
+@media (prefers-reduced-motion:reduce){.marquee__track{animation:none}.marquee__item{animation:none}}
 /* —— lightbox —— */
 .lightbox{position:fixed;inset:0;z-index:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(8,10,16,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;transition:opacity .3s}
 .lightbox.show{opacity:1}
@@ -532,24 +567,53 @@ SPACE"></span>
     <div class="gallery-head reveal">
       <div><span class="eyebrow">图文 · 摄影与排版</span><h2 class="sec-title">关于呼吸感——</h2></div>
     </div>
-    <div class="editorial-cols">
-      <div class="ed-col">
-        <h3 class="ed-col-title">摄影</h3>
-        <div class="accordion" data-acc>
-          <button class="fold" data-src="images/photo-3.png" data-cap="摄影 · 01" style="background-image:url(images/photo-3.png)"><span class="fold-cap">摄影 · 01</span></button>
-          <button class="fold" data-src="images/photo-4.png" data-cap="摄影 · 02" style="background-image:url(images/photo-4.png)"><span class="fold-cap">摄影 · 02</span></button>
-          <button class="fold" data-src="images/photo-2.png" data-cap="摄影 · 03" style="background-image:url(images/photo-2.png)"><span class="fold-cap">摄影 · 03</span></button>
+
+    <!-- H5 交互作品 · 竖屏图文封面 -->
+    <a class="h5-cover reveal" href="exhibition.html" target="_blank" rel="noopener" aria-label="打开镜界 LOOKING GLASS 超现实虚拟展览 H5">
+      <div class="h5-cover__media" style="background-image:url(images/alice-cover.jpg)"></div>
+      <div class="h5-cover__scrim" aria-hidden="true"></div>
+      <div class="h5-cover__inner">
+        <div class="h5-cover__eyebrow">H5 交互作品 · INTERACTIVE</div>
+        <h3 class="h5-cover__title">镜界 <span>LOOKING GLASS</span></h3>
+        <p class="h5-cover__desc">伸手推开那面镜子，就掉进了爱丽丝的奇境里。怀表还在滴答，茶会没有散场，白玫瑰正被一点点刷红。慢慢走过这 10 件展品，翻开每一张卡片，听它把自己的故事讲给你听——最后，别忘了在红桃皇后的花园里，悄悄留下一句只属于你的话。</p>
+        <div class="h5-cover__meta"><span class="pill">H5</span><span class="pill">交互</span><span class="pill">动效</span><span class="pill">陀螺仪</span><span class="pill">Canvas 海报</span></div>
+        <div class="h5-cover__cta">
+          <span>全屏打开</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </div>
-      <div class="ed-col">
-        <h3 class="ed-col-title">图文排版</h3>
-        <div class="accordion" data-acc>
-          <button class="fold" data-src="images/layout-5.png" data-cap="图文排版 · 01" style="background-image:url(images/layout-5.png)"><span class="fold-cap">图文排版 · 01</span></button>
-          <button class="fold" data-src="images/layout-2.png" data-cap="图文排版 · 02" style="background-image:url(images/layout-2.png)"><span class="fold-cap">图文排版 · 02</span></button>
-          <button class="fold" data-src="images/layout-3.png" data-cap="图文排版 · 03" style="background-image:url(images/layout-3.png)"><span class="fold-cap">图文排版 · 03</span></button>
-          <button class="fold" data-src="images/layout-4.png" data-cap="图文排版 · 04" style="background-image:url(images/layout-4.png)"><span class="fold-cap">图文排版 · 04</span></button>
-          <button class="fold" data-src="images/layout-1.png" data-cap="图文排版 · 05" style="background-image:url(images/layout-1.png)"><span class="fold-cap">图文排版 · 05</span></button>
-        </div>
+    </a>
+
+    <!-- 摄影 · 图文排版：悬浮左右环绕自动循环跑马灯 -->
+    <div class="marquee reveal" aria-label="摄影与图文排版作品循环展示">
+      <div class="marquee__viewport">
+      <div class="marquee__track">
+        <figure class="marquee__item"><img src="images/photo-3.png" alt="摄影 · 01" loading="lazy"><figcaption>摄影 · 01</figcaption></figure>
+        <figure class="marquee__item"><img src="images/photo-4.png" alt="摄影 · 02" loading="lazy"><figcaption>摄影 · 02</figcaption></figure>
+        <figure class="marquee__item"><img src="images/photo-2.png" alt="摄影 · 03" loading="lazy"><figcaption>摄影 · 03</figcaption></figure>
+        <figure class="marquee__item"><img src="images/layout-5.png" alt="图文排版 · 01" loading="lazy"><figcaption>图文排版 · 01</figcaption></figure>
+        <figure class="marquee__item"><img src="images/layout-2.png" alt="图文排版 · 02" loading="lazy"><figcaption>图文排版 · 02</figcaption></figure>
+        <figure class="marquee__item"><img src="images/layout-3.png" alt="图文排版 · 03" loading="lazy"><figcaption>图文排版 · 03</figcaption></figure>
+        <figure class="marquee__item"><img src="images/layout-4.png" alt="图文排版 · 04" loading="lazy"><figcaption>图文排版 · 04</figcaption></figure>
+        <figure class="marquee__item"><img src="images/layout-1.png" alt="图文排版 · 05" loading="lazy"><figcaption>图文排版 · 05</figcaption></figure>
+        <!-- 复制一份实现无缝循环 -->
+        <figure class="marquee__item" aria-hidden="true"><img src="images/photo-3.png" alt="" loading="lazy"><figcaption>摄影 · 01</figcaption></figure>
+        <figure class="marquee__item" aria-hidden="true"><img src="images/photo-4.png" alt="" loading="lazy"><figcaption>摄影 · 02</figcaption></figure>
+        <figure class="marquee__item" aria-hidden="true"><img src="images/photo-2.png" alt="" loading="lazy"><figcaption>摄影 · 03</figcaption></figure>
+        <figure class="marquee__item" aria-hidden="true"><img src="images/layout-5.png" alt="" loading="lazy"><figcaption>图文排版 · 01</figcaption></figure>
+        <figure class="marquee__item" aria-hidden="true"><img src="images/layout-2.png" alt="" loading="lazy"><figcaption>图文排版 · 02</figcaption></figure>
+        <figure class="marquee__item" aria-hidden="true"><img src="images/layout-3.png" alt="" loading="lazy"><figcaption>图文排版 · 03</figcaption></figure>
+        <figure class="marquee__item" aria-hidden="true"><img src="images/layout-4.png" alt="" loading="lazy"><figcaption>图文排版 · 04</figcaption></figure>
+        <figure class="marquee__item" aria-hidden="true"><img src="images/layout-1.png" alt="" loading="lazy"><figcaption>图文排版 · 05</figcaption></figure>
+      </div>
+      </div>
+      <div class="marquee__ctrl" aria-hidden="true">
+        <button type="button" class="marquee__btn marquee__btn--prev" aria-label="向左滚动一屏" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 19l-7-7 7-7"/></svg>
+        </button>
+        <button type="button" class="marquee__btn marquee__btn--next" aria-label="向右滚动一屏">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -1303,7 +1367,7 @@ window.MSG_ENDPOINT='/api/msg';          // 默认相对路径：整站部署在
 })();
 </script>
 <script>
-/* —— editorial accordion + lightbox —— */
+/* —— editorial: lightbox (accordion 兼容保留) + marquee 点击放大 —— */
 (function(){
   const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
   function openLB(src,cap){lbImg.src=src;lbCap.textContent=cap;lb.hidden=false;requestAnimationFrame(()=>lb.classList.add('show'));}
@@ -1317,9 +1381,82 @@ window.MSG_ENDPOINT='/api/msg';          // 默认相对路径：整站部署在
     });
     acc.addEventListener('mouseleave',()=>folds.forEach(x=>x.classList.remove('active')));
   });
+  // 跑马灯图片点击放大（跳过复制的 aria-hidden 项）
+  document.querySelectorAll('.marquee__item:not([aria-hidden]) img').forEach(img=>{
+    img.style.cursor='zoom-in';
+    img.addEventListener('click',()=>openLB(img.getAttribute('src'),img.getAttribute('alt')||''));
+  });
   document.getElementById('lbClose').addEventListener('click',closeLB);
   lb.addEventListener('click',e=>{if(e.target===lb)closeLB();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!lb.hidden)closeLB();});
+
+  /* —— 跑马灯手动步进控制（右滑 / 左滑，末尾禁用反馈）—— */
+  (function(){
+    const marquee=document.querySelector('.marquee');
+    if(!marquee)return;
+    const track=marquee.querySelector('.marquee__track');
+    const viewport=marquee.querySelector('.marquee__viewport');
+    const prevBtn=marquee.querySelector('.marquee__btn--prev');
+    const nextBtn=marquee.querySelector('.marquee__btn--next');
+    const ctrl=marquee.querySelector('.marquee__ctrl');
+    if(!track||!viewport||!prevBtn||!nextBtn)return;
+    // 只对“真实项”（非复制副本）做步进计算
+    const realItems=track.querySelectorAll('.marquee__item:not([aria-hidden])');
+    if(!realItems.length)return;
+    // 控制按钮是交互元素，需对辅助技术可见
+    if(ctrl)ctrl.removeAttribute('aria-hidden');
+
+    let offset=0;                 // 当前左移距离（px，>=0）
+    let manual=false;
+
+    function step(){
+      const first=realItems[0];
+      const styles=getComputedStyle(track);
+      const gap=parseFloat(styles.columnGap||styles.gap)||22;
+      return first.getBoundingClientRect().width+gap;
+    }
+    // 手动模式下内容总宽（仅真实项）与可视宽度之差 = 最大左移量
+    function maxOffset(){
+      const last=realItems[realItems.length-1];
+      const firstLeft=realItems[0].getBoundingClientRect().left;
+      const contentW=last.getBoundingClientRect().right-firstLeft;
+      const viewW=viewport.getBoundingClientRect().width;
+      return Math.max(0,contentW-viewW);
+    }
+    function apply(){
+      track.style.transform='translateX(-'+offset+'px)';
+      const max=maxOffset();
+      // 到达末尾 / 起点时禁用对应按钮，提供视觉反馈
+      nextBtn.disabled=offset>=max-1;
+      prevBtn.disabled=offset<=1;
+    }
+    function enterManual(){
+      if(manual)return;
+      manual=true;
+      // 冻结当前自动动画滚动到的位置，避免切换瞬间跳变
+      const m=new DOMMatrixReadOnly(getComputedStyle(track).transform);
+      offset=Math.max(0,-m.m41);
+      const max=maxOffset();
+      if(offset>max)offset=max;
+      marquee.dataset.mode='manual';
+      apply();
+    }
+    function scrollBy(dir){
+      enterManual();
+      const max=maxOffset();
+      offset=Math.min(max,Math.max(0,offset+dir*step()));
+      apply();
+    }
+    nextBtn.addEventListener('click',()=>scrollBy(1));
+    prevBtn.addEventListener('click',()=>scrollBy(-1));
+    // 尺寸变化后重新校正边界与禁用态
+    let rz;
+    window.addEventListener('resize',()=>{
+      if(!manual)return;
+      clearTimeout(rz);
+      rz=setTimeout(()=>{const max=maxOffset();if(offset>max)offset=max;apply();},150);
+    });
+  })();
 })();
 </script>
 
